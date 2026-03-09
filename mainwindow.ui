@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>650</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>TESTING - MCC25</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../../Imágenes/Icons/mazeIcon.jpg</normaloff>../../../../Imágenes/Icons/mazeIcon.jpg</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <widget class="QLabel" name="label_udp_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>350</y>
+      <width>78</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>DEBUG</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line_3">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>12</y>
+      <width>491</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Orientation::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_CMD">
+    <property name="geometry">
+     <rect>
+      <x>13</x>
+      <y>52</y>
+      <width>481</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_udp">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>173</y>
+      <width>78</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>WIFI - UDP</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_serial">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>88</y>
+      <width>50</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>SERIAL</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_sensors">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>10</y>
+      <width>65</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>SENSORS</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_communications">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>24</y>
+      <width>140</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>COMMUNICATIONS</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>380</y>
+      <width>461</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QTextBrowser" name="textBrowserUnProcessed"/>
+     </item>
+     <item>
+      <widget class="QTextBrowser" name="textBrowserProcessed"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>20</y>
+      <width>20</width>
+      <height>611</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Orientation::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_4">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>330</y>
+      <width>481</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Orientation::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>14</x>
+      <y>117</y>
+      <width>481</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_8">
+     <item>
+      <widget class="QComboBox" name="comboBox_PORT">
+       <property name="placeholderText">
+        <string>PORTS</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QPushButton" name="pushButton_connectSerial">
+         <property name="text">
+          <string>CONNECT</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_sendSerial">
+         <property name="text">
+          <string>SEND SERIAL</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>43</y>
+      <width>115</width>
+      <height>361</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="ax_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>AX</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ax_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>ACC DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ay_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>AY</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ay_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>ACC DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="az_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>AZ</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="az_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>ACC DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="gx_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GX</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="gx_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GYRO DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="gy_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GY</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="gy_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GYRODATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="gz_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GZ</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="gz_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>GYRODATA</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>40</y>
+      <width>91</width>
+      <height>483</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QLabel" name="ir1_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR1</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir1_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir2_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR2</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir2_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir3_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR3</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir3_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir4_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR4</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir4_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir5_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR5</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir5_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir6_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR6</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir6_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir7_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR7</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir7_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir8_label">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR8</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ir8_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>IR DATA</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>22</x>
+      <y>204</y>
+      <width>471</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QLineEdit" name="lineEdit_local_port">
+         <property name="text">
+          <string>30010</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="pushButton_sendUdp">
+           <property name="text">
+            <string>SEND UDP</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_connectUdp">
+           <property name="text">
+            <string>CONNECT</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLineEdit" name="lineEdit_device_ip">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_device_ip">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>DEVICE IP</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QLineEdit" name="lineEdit_device_port">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_devide_port">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>DEVICE PORT</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionQUIT">
+   <property name="text">
+    <string>QUIT</string>
+   </property>
+  </action>
+  <action name="actionPROTOCOL_DATA">
+   <property name="text">
+    <string>PROTOCOL DATA</string>
+   </property>
+  </action>
+  <action name="actionCAR_MODE">
+   <property name="text">
+    <string>CAR MODE</string>
+   </property>
+  </action>
+  <action name="actionHELP">
+   <property name="text">
+    <string>HELP</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
