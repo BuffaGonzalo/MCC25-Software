@@ -180,6 +180,8 @@ private:
         GETMPU=0xF2,
         GETADC=0xF3,
         SETPWM=0xF4,
+        SETPID=0XF5,
+        SETPWMLIMIT=0xF6,
         UNKNOWCMD=0xFF,
         GETFLANKS=0xA8,
         POSITION=0xA9,

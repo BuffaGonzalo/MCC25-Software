@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox_CMD->addItem("GETMPU", 0xF2);
     ui->comboBox_CMD->addItem("GETADC", 0xF3);
     ui->comboBox_CMD->addItem("SETPWM", 0xF4);
+    ui->comboBox_CMD->addItem("SETPID", 0xF5);
+    ui->comboBox_CMD->addItem("SETPWMLIMIT", 0xF6);
     ui->comboBox_CMD->addItem("*", 0xA9);
 
     //inicializamos
@@ -310,7 +312,8 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
 
         break;
     case SETPWM:
-
+        break;
+    case SETPID:
         break;
     default:
         str = str + "Comando DESCONOCIDO!!!!";
@@ -362,6 +365,33 @@ void MainWindow::sendDataSerial(){
             break;
         dato[indice++] = w.ui8[0];
         dato[NBYTES]= 0x06;
+        break;
+    case SETPID:
+        dato[indice++] =SETPID;
+        w.i32 = QInputDialog::getInt(this, "PID", "Kp", 0, 0, 5000, 1, &ok);
+        if(!ok)
+            return;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+        w.i32 = QInputDialog::getInt(this, "PID", "Ki", 0, 0, 5000, 1, &ok);
+        if(!ok)
+            return;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+        w.i32 = QInputDialog::getInt(this, "PID", "Kd", 0, 0, 5000, 1, &ok);
+        if(!ok)
+            return;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+        dato[NBYTES]= 0x08;
+        break;
+    case SETPWMLIMIT:
+        dato[indice++] =SETPWMLIMIT;
+        w.i32 = QInputDialog::getInt(this, "PWM_MAX", "Valor: ", 0, 0, 200, 1, &ok);
+        if(!ok)
+            return;
+        dato[indice++] = w.ui8[0];
+        dato[NBYTES]= 0x03;
         break;
     default:
         return;
@@ -657,6 +687,33 @@ void MainWindow::sendDataUDP(){
         dato[indice++] = w.ui8[0];
         dato[NBYTES]= 0x06;
         break;
+    case SETPID:
+        dato[indice++] =SETPID;
+        w.i32 = QInputDialog::getInt(this, "PID", "Kp", 0, 0, 5000, 1, &ok);
+        if(!ok)
+            return;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+        w.i32 = QInputDialog::getInt(this, "PID", "Ki", 0, 0, 5000, 1, &ok);
+        if(!ok)
+            return;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+        w.i32 = QInputDialog::getInt(this, "PID", "Kd", 0, 0, 5000, 1, &ok);
+        if(!ok)
+            return;
+        dato[indice++] = w.ui8[0];
+        dato[indice++] = w.ui8[1];
+        dato[NBYTES]= 0x08;
+        break;
+    case SETPWMLIMIT:
+        dato[indice++] =SETPWMLIMIT;
+        w.i32 = QInputDialog::getInt(this, "PWM_MAX", "Valor: ", 0, 0, 200, 1, &ok);
+        if(!ok)
+            return;
+        dato[indice++] = w.ui8[0];
+        dato[NBYTES]= 0x03;
+        break;
     default:
         return;
         break;
@@ -693,11 +750,13 @@ void MainWindow::getData(){
     n=1;
     buf[0] = cmd;
     sendSerial(buf,n);
+    sendUdp(buf,n);
 
     cmd=GETADC;
     n=1;
     buf[0] = cmd;
     sendSerial(buf,n);
+    sendUdp(buf,n);
 
     if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()) //colocamos un estadopredeterminado en caso de no estar conectado
         statusMode->setText("CURRENT STATE --> IDLE");
@@ -795,3 +854,6 @@ void MainWindow::on_pushButton_connectUdp_clicked()
     }
 }
 
+void MainWindow::on_pushButton_sendUdp_clicked()
+{
+}
