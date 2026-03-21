@@ -140,6 +140,7 @@ private:
         SETPID=0XF5,
         SETPWMLIMIT=0xF6,
         SETLINECTRL=0xF7,
+        GETTELEMETRY=0xF8,
         UNKNOWCMD=0xFF,
         GETFLANKS=0xA8,
         POSITION=0xA9,

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>661</width>
-    <height>570</height>
+    <width>768</width>
+    <height>498</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,9 @@
   <widget class="QLabel" name="label_serial">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>30</y>
-     <width>50</width>
+     <x>10</x>
+     <y>10</y>
+     <width>101</width>
      <height>20</height>
     </rect>
    </property>
@@ -28,10 +28,64 @@
     </font>
    </property>
    <property name="text">
-    <string>ANGLE</string>
+    <string>TELEMETRIA</string>
+   </property>
+  </widget>
+  <widget class="QChartView" name="visorBalancin" native="true">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>50</y>
+     <width>711</width>
+     <height>201</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QChartView" name="visorSeguidor" native="true">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>270</y>
+     <width>711</width>
+     <height>211</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblReflectancia">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>20</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblEstado">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>20</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QWidget</extends>
+   <header location="global">qchartview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

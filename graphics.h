@@ -2,7 +2,7 @@
 #define GRAPHICS_H
 
 #include <QDialog>
-#include <QtCharts> // Añadimos la librería
+#include <QtCharts>
 
 namespace Ui {
 class graphics;
@@ -16,18 +16,25 @@ public:
     explicit graphics(QWidget *parent = nullptr);
     ~graphics();
 
-    // Función pública para que MainWindow le envíe los datos
-    void updateGraph(double time, double angle, double setpoint, double pwm);
+    // Nueva función que recibe todos los datos
+    void updateTelemetry(double time, double angle, double setpoint, int lineError, int turnPwm, int sumIR, int state);
 
 private:
     Ui::graphics *ui;
 
-    // Elementos de la gráfica
-    QChart *chart;
+    // Elementos de la Gráfica 1 (Equilibrio)
+    QChart *chartBalance;
     QLineSeries *angleSeries;
     QLineSeries *setpointSeries;
-    QValueAxis *axisX;
-    QValueAxis *axisY;
+    QValueAxis *axisX_bal;
+    QValueAxis *axisY_bal;
+
+    // Elementos de la Gráfica 2 (Seguidor)
+    QChart *chartLine;
+    QLineSeries *errorSeries;
+    QLineSeries *pwmSeries;
+    QValueAxis *axisX_line;
+    QValueAxis *axisY_line;
 };
 
 #endif // GRAPHICS_H

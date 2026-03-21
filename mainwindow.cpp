@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     runtimeTimer.start();
 
     timer1->start(100);
-    timer2->start(500);
+    timer2->start(50);
 }
 
 MainWindow::~MainWindow()
@@ -276,8 +276,6 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         double currentSetpoint = 0.5;
         double currentPwm = 0.0;      // Necesitarás enviarlo desde el STM32
 
-        myGraphics->updateGraph(t, pitch, currentSetpoint, currentPwm);
-
         // (Opcional) Calcular Yaw integrando el giroscopio
         float gz_grados_seg = gz / 131.0f; // Asumiendo escala de +/- 250deg/s
         if (abs(gz_grados_seg) > 1.0f) {
@@ -377,6 +375,39 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             ui->textBrowserProcessed->append(str);
         }
         break;
+    case GETTELEMETRY: {
+
+        w.ui8[0] = datosRx[2];
+        w.ui8[1] = datosRx[3];
+        float anguloActual = w.i16[0] / 100.0f; // Volvemos a grados reales
+
+        w.ui8[0] = datosRx[4];
+        w.ui8[1] = datosRx[5];
+        float setpointGrados = w.i16[0] / 100.0f;
+
+        w.ui8[0] = datosRx[6];
+        w.ui8[1] = datosRx[7];
+        int errorLinea = w.i16[0];
+
+        w.ui8[0] = datosRx[8];
+        w.ui8[1] = datosRx[9];
+        int giroPWM = w.i16[0];
+
+        w.ui8[0] = datosRx[10];
+        w.ui8[1] = datosRx[11];
+        int sumaIR = w.i16[0];
+
+        int estadoLinea = datosRx[12];
+
+        // Calcular el tiempo transcurrido
+        double t = runtimeTimer.elapsed() / 1000.0;
+
+        // Enviar a la ventana gráfica
+        if (myGraphics) {
+            myGraphics->updateTelemetry(t, anguloActual, setpointGrados, errorLinea, giroPWM, sumaIR, estadoLinea);
+        }
+        break;
+    }
     default:
         str = str + "Comando DESCONOCIDO!!!!";
         ui->textBrowserProcessed->append(str);
@@ -588,7 +619,6 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         if(!ok) return false;
         payload[index++] = w.i8[0];
         payload[index++] = w.i8[1];
-
         break;
     default:
         return false; // Comando desconocido
@@ -710,20 +740,28 @@ void MainWindow::OnUdpRxData(){
 
 
 void MainWindow::getData(){
-    uint8_t cmd, buf[24];
-    uint8_t n;
+    static uint8_t wifiMef = 1;
+    uint8_t buf[1];
 
-    cmd=GETMPU;
-    n=1;
-    buf[0] = cmd;
-    sendSerial(buf,n);
-    sendUdp(buf,n);
+    switch (wifiMef){
+    case 1:
+        buf[0]=GETMPU;
+        break;
+    case 2:
+        buf[0]=GETADC;
+        break;
+    case 3:
+        buf[0]=GETTELEMETRY;
+        break;
+    }
 
-    cmd=GETADC;
-    n=1;
-    buf[0] = cmd;
-    sendSerial(buf,n);
-    sendUdp(buf,n);
+    wifiMef++;
+    if (wifiMef > 3) {
+        wifiMef = 0;
+    }
+
+    sendSerial(buf, 1);
+    sendUdp(buf, 1);
 
     if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()) //colocamos un estadopredeterminado en caso de no estar conectado
         statusMode->setText("CURRENT STATE --> IDLE");

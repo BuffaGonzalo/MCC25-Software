@@ -7,44 +7,51 @@ graphics::graphics(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 1. Inicializar las series (líneas)
+    // --- GRÁFICA 1: EQUILIBRIO ---
     angleSeries = new QLineSeries();
-    angleSeries->setName("Ángulo Actual");
-
+    angleSeries->setName("Ángulo Actual (°)");
     setpointSeries = new QLineSeries();
-    setpointSeries->setName("Setpoint");
+    setpointSeries->setName("Setpoint (°)");
 
-    // 2. Crear la gráfica y añadir las series
-    chart = new QChart();
-    chart->addSeries(angleSeries);
-    chart->addSeries(setpointSeries);
-    chart->setTitle("Telemetría PID Balancín");
+    chartBalance = new QChart();
+    chartBalance->addSeries(angleSeries);
+    chartBalance->addSeries(setpointSeries);
+    chartBalance->setTitle("Dinámica de Equilibrio (Cabeceo)");
+    chartBalance->layout()->setContentsMargins(0,0,0,0);
 
-    // 3. Configurar los Ejes (X: Tiempo, Y: Ángulo)
-    axisX = new QValueAxis();
-    axisX->setTitleText("Tiempo (s)");
-    axisX->setRange(0, 10); // Veremos ventanas de 10 segundos
-    chart->addAxis(axisX, Qt::AlignBottom);
+    axisX_bal = new QValueAxis(); axisX_bal->setRange(0, 10);
+    axisY_bal = new QValueAxis(); axisY_bal->setRange(-15, 15); // Ajusta según tu necesidad
 
-    axisY = new QValueAxis();
-    axisY->setTitleText("Ángulo (°)");
-    axisY->setRange(-45, 45); // Rango de caída del balancín
-    chart->addAxis(axisY, Qt::AlignLeft);
+    chartBalance->addAxis(axisX_bal, Qt::AlignBottom);
+    chartBalance->addAxis(axisY_bal, Qt::AlignLeft);
+    angleSeries->attachAxis(axisX_bal); angleSeries->attachAxis(axisY_bal);
+    setpointSeries->attachAxis(axisX_bal); setpointSeries->attachAxis(axisY_bal);
 
-    // Vincular ejes a las series
-    angleSeries->attachAxis(axisX);
-    angleSeries->attachAxis(axisY);
-    setpointSeries->attachAxis(axisX);
-    setpointSeries->attachAxis(axisY);
+    ui->visorBalancin->setChart(chartBalance);
+    ui->visorBalancin->setRenderHint(QPainter::Antialiasing);
 
-    // 4. Crear el visualizador e insertarlo en la ventana
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
+    // --- GRÁFICA 2: SEGUIDOR DE LÍNEA ---
+    errorSeries = new QLineSeries();
+    errorSeries->setName("Error de Línea");
+    pwmSeries = new QLineSeries();
+    pwmSeries->setName("PWM de Giro");
 
-    // Creamos un Layout para que la gráfica llene toda la subventana
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->addWidget(chartView);
-    setLayout(layout);
+    chartLine = new QChart();
+    chartLine->addSeries(errorSeries);
+    chartLine->addSeries(pwmSeries);
+    chartLine->setTitle("Dinámica de Dirección");
+    chartLine->layout()->setContentsMargins(0,0,0,0);
+
+    axisX_line = new QValueAxis(); axisX_line->setRange(0, 10);
+    axisY_line = new QValueAxis(); axisY_line->setRange(-100, 100);
+
+    chartLine->addAxis(axisX_line, Qt::AlignBottom);
+    chartLine->addAxis(axisY_line, Qt::AlignLeft);
+    errorSeries->attachAxis(axisX_line); errorSeries->attachAxis(axisY_line);
+    pwmSeries->attachAxis(axisX_line); pwmSeries->attachAxis(axisY_line);
+
+    ui->visorSeguidor->setChart(chartLine);
+    ui->visorSeguidor->setRenderHint(QPainter::Antialiasing);
 }
 
 graphics::~graphics()
@@ -52,14 +59,28 @@ graphics::~graphics()
     delete ui;
 }
 
-void graphics::updateGraph(double time, double angle, double setpoint, double pwm)
+void graphics::updateTelemetry(double time, double angle, double setpoint, int lineError, int turnPwm, int sumIR, int state)
 {
-    // Añadir los nuevos puntos a las líneas
+    // Actualizar Gráficas
     angleSeries->append(time, angle);
     setpointSeries->append(time, setpoint);
+    errorSeries->append(time, lineError);
+    pwmSeries->append(time, turnPwm);
 
-    // Desplazar el eje X para crear el efecto de "osciloscopio" (Scroll)
+    // Scroll del eje X (Ventana de 10 segundos)
     if (time > 10.0) {
-        axisX->setRange(time - 10.0, time);
+        axisX_bal->setRange(time - 10.0, time);
+        axisX_line->setRange(time - 10.0, time);
+    }
+
+    // Actualizar Labels
+    ui->lblReflectancia->setText(QString("Reflectancia (SUM): %1").arg(sumIR));
+
+    if (state == 0) {
+        ui->lblEstado->setText("Estado: BUSCANDO LÍNEA (Rojo)");
+        ui->lblEstado->setStyleSheet("QLabel { color : red; font-weight: bold; }");
+    } else {
+        ui->lblEstado->setText("Estado: SIGUIENDO LÍNEA (Verde)");
+        ui->lblEstado->setStyleSheet("QLabel { color : green; font-weight: bold; }");
     }
 }
