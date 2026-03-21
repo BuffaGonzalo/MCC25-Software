@@ -89,6 +89,28 @@ View3D {
         ambientColor: Qt.rgba(0.5, 0.5, 0.5, 1.0)
     }
 
+    // ── Suelo (Plano horizontal) ───────────────────────────────────
+    Model {
+        id: groundPlane
+        source: "#Rectangle"
+
+        // Posición vertical: Ajusta este valor (ej. -50 o -100) si las
+        // ruedas del auto quedan "enterradas" en el piso.
+        y: 0
+
+        // Escala: Como el auto está escalado a 1500, el suelo debe ser masivo
+        scale: Qt.vector3d(5000, 5000, 1)
+
+        // Rotación: Acuesta el rectángulo para que actúe como piso
+        eulerRotation.x: -90
+
+        materials: PrincipledMaterial {
+            baseColor: "#FFFFFF" // Un color gris tipo asfalto
+            roughness: 0.9       // Opaco, para que no parezca un espejo
+            metalness: 0.0
+        }
+    }
+
     // ── Modelo 3D del robot ────────────────────────────────────────
     AutoMicroSimplify {
         id: carModel

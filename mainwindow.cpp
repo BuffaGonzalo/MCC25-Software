@@ -16,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     QSerialPort1 = new QSerialPort(this);
     QUdpSocket1 = new QUdpSocket(this);
 
+    //debug de comandos
+    myGraphics = new graphics(this);
+
     ui->comboBox_PORT->installEventFilter(this);
 
     //connects del puerto serial
@@ -31,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_sendUdp,&QPushButton::clicked,this,&MainWindow::sendDataUDP);
 
     //connect(ui->actionScanPorts, &QAction::triggered, settingPorts,&SettingsDialog::show);
-    //connect(ui->actionPROTOCOL_DATA, &QAction::triggered, myDebug, &Debug::show);
+    connect(ui->actionGRAPHICS, &QAction::triggered, myGraphics, &graphics::show);
 
     //añadimos los comandos
     ui->comboBox_CMD->addItem("ALIVE", 0xF0);
@@ -53,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_sendSerial->setEnabled(false);
 
     statusMode = new QLabel(ui->statusBar);
+
+    runtimeTimer.start();
 
     timer1->start(100);
     timer2->start(500);
@@ -263,6 +268,16 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         float pitch = atan2(ay, sqrt(ax * ax + az * az)) * 180.0 / M_PI;
         float roll = atan2(-ax, sqrt(ay * ay + az * az)) * 180.0 / M_PI;
 
+        // ---- NUEVO: Enviar a la gráfica ----
+        // Obtenemos el tiempo en segundos
+        double t = runtimeTimer.elapsed() / 1000.0;
+
+        // (Por ahora ponemos el setpoint manual, luego puedes leerlo del STM32)
+        double currentSetpoint = 0.5;
+        double currentPwm = 0.0;      // Necesitarás enviarlo desde el STM32
+
+        myGraphics->updateGraph(t, pitch, currentSetpoint, currentPwm);
+
         // (Opcional) Calcular Yaw integrando el giroscopio
         float gz_grados_seg = gz / 131.0f; // Asumiendo escala de +/- 250deg/s
         if (abs(gz_grados_seg) > 1.0f) {
@@ -353,6 +368,12 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
     case SETPWMLIMIT:
         if(datosRx[2]==ACK){
             str="MODIFICACION VELOCIDAD MAXIMA PID!!!";
+            ui->textBrowserProcessed->append(str);
+        }
+        break;
+    case SETLINECTRL:
+        if(datosRx[2]==ACK){
+            str="MODIFICACION PARAMETROS PID!!!";
             ui->textBrowserProcessed->append(str);
         }
         break;
@@ -553,17 +574,17 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         break;
     case SETLINECTRL:
         payload[index++] = SETLINECTRL;
-        w.i32 = QInputDialog::getInt(this, "Line Control", "Kp_line:", 0, 0, 200, 1, &ok);
+        w.i32 = QInputDialog::getInt(this, "Line Control", "Kp_line:", 0, -1000, 1000, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];
 
-        w.i32 = QInputDialog::getInt(this, "Line Control", "Kd_line:", 0, 0, 200, 1, &ok);
+        w.i32 = QInputDialog::getInt(this, "Line Control", "Kd_line:", 0, -1000, 1000, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];
 
-        w.i32 = QInputDialog::getInt(this, "Line Control", "Setpoint (ej: 150 = 1.5 grados):", 0, -200, 200, 1, &ok);
+        w.i32 = QInputDialog::getInt(this, "Line Control", "Setpoint base (ej: 100 = 1.0 grado):", 80, -1000, 1000, 10, &ok);
         if(!ok) return false;
         payload[index++] = w.i8[0];
         payload[index++] = w.i8[1];

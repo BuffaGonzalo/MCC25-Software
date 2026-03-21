@@ -16,6 +16,9 @@
 #include <QQuickWidget>
 #include <QQuickItem>
 
+#include <QElapsedTimer>
+
+#include "graphics.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -90,6 +93,9 @@ private:
     QTimer  *timer1;
     QTimer  *timer2;
 
+
+    graphics *myGraphics;
+
     //variables comunicacion udp
     QUdpSocket *QUdpSocket1;
     QHostAddress RemoteAddress;
@@ -106,6 +112,8 @@ private:
 
     uint32_t lftEncData;
     uint32_t rhtEncData;
+
+    QElapsedTimer runtimeTimer;
 
     typedef enum{
         START,

@@ -389,7 +389,7 @@
       <x>700</x>
       <y>50</y>
       <width>111</width>
-      <height>361</height>
+      <height>483</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -777,6 +777,24 @@
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>873</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuDEBUG">
+    <property name="title">
+     <string>DEBUG</string>
+    </property>
+    <addaction name="actionGRAPHICS"/>
+    <addaction name="actionLOGS"/>
+   </widget>
+   <addaction name="menuDEBUG"/>
+  </widget>
   <action name="actionQUIT">
    <property name="text">
     <string>QUIT</string>
@@ -795,6 +813,16 @@
   <action name="actionHELP">
    <property name="text">
     <string>HELP</string>
+   </property>
+  </action>
+  <action name="actionGRAPHICS">
+   <property name="text">
+    <string>GRAPHICS</string>
+   </property>
+  </action>
+  <action name="actionLOGS">
+   <property name="text">
+    <string>LOGS</string>
    </property>
   </action>
  </widget>
