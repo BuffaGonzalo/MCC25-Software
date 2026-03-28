@@ -52,8 +52,6 @@ private slots:
 
     void on_pushButton_connectUdp_clicked();
 
-    void on_pushButton_sendUdp_clicked();
-
     void getData();
 
     /**
@@ -80,7 +78,6 @@ private slots:
     void sendUdp(uint8_t *buf, uint8_t length);
 
     bool eventFilter(QObject *watched, QEvent *event);
-
 
 private:
     Ui::MainWindow *ui;

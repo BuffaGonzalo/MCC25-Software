@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>861</width>
+    <width>1088</width>
     <height>816</height>
    </rect>
   </property>
@@ -224,380 +224,6 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>50</y>
-      <width>115</width>
-      <height>361</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLabel" name="ax_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>AX</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ax_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>ACC DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ay_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>AY</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ay_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>ACC DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="az_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>AZ</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="az_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>ACC DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="gx_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>GX</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="gx_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>GYRO DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="gy_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>GY</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="gy_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>GYRODATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="gz_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>GZ</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="gz_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>GYRODATA</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>700</x>
-      <y>50</y>
-      <width>111</width>
-      <height>361</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QLabel" name="ir1_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR1</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir1_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir2_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR2</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir2_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir3_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR3</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir3_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir4_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR4</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir4_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir5_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR5</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir5_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir6_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR6</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir6_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir7_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR7</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir7_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir8_label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR8</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ir8_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IR DATA</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
       <x>22</x>
       <y>204</y>
       <width>471</width>
@@ -775,31 +401,288 @@
      <enum>QQuickWidget::ResizeMode::SizeRootObjectToView</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="lblReflectancia">
+   <widget class="Line" name="line_5">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>740</y>
-      <width>141</width>
-      <height>16</height>
+      <x>860</x>
+      <y>20</y>
+      <width>20</width>
+      <height>721</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Reflectancia</string>
+    <property name="orientation">
+     <enum>Qt::Orientation::Vertical</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="lblEstado">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>740</y>
-      <width>171</width>
-      <height>16</height>
+      <x>890</x>
+      <y>40</y>
+      <width>168</width>
+      <height>605</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <widget class="QLabel" name="kpBalancin">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KP_BALANCIN</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kpStableData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KP_DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kdBalancin">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KD_BALANCIN</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kdStableData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KD_DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kiBalancin">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KI_BALANCIN</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kiStableData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KI_DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kpVel">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KP_VEL</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kpVelData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KP_DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kiVel">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KI_VEL</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kiVelData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KI_DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kpLine">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KP_LINE</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kpLineData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KP_DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kdLine">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KP_LINE</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kdLineData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KP_DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="setpoint">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>SETPOINT</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="setpointData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>SETPOINT_DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="maxPwm">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>MAX_PWM</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="maxPwmData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>MAX_PWM_DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="minPwm">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>MIN_PWM</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="minPwmData">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>MIN_PWM_DATA</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_sensors_3">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>10</y>
+      <width>151</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="font">
@@ -808,8 +691,414 @@
      </font>
     </property>
     <property name="text">
-     <string>Estado</string>
+     <string>CUSTOM VALUES</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>50</y>
+      <width>321</width>
+      <height>361</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="ax_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>AX</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ax_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>ACC DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ay_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>AY</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ay_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>ACC DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="az_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>AZ</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="az_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>ACC DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="gx_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>GX</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="gx_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>GYRO DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="gy_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>GY</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="gy_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>GYRODATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="gz_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>GZ</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="gz_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>GYRODATA</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="ir1_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR1</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir1_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir2_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir2_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir3_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR3</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir3_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir4_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR4</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir4_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir5_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR5</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir5_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir6_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR6</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir6_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir7_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR7</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir7_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR DATA</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir8_label">
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR8</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ir8_data">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>IR DATA</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>740</y>
+      <width>461</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_9">
+     <item>
+      <widget class="QLabel" name="lblReflectancia">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Reflectancia</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lblEstado">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Estado</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -818,7 +1107,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>861</width>
+     <width>1088</width>
      <height>25</height>
     </rect>
    </property>

@@ -560,6 +560,7 @@ void MainWindow::sendDataUDP(){
 bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
     uint8_t cmdId = ui->comboBox_CMD->currentData().toInt();
     _udat w;
+    QString str;
     bool ok;
     uint8_t index = 0;
 
@@ -594,26 +595,39 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->kpStableData->setText(str);
 
-        w.i32 = QInputDialog::getInt(this, "PID_Balancin", "Ki", 0, 0, 5000, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
 
         w.i32 = QInputDialog::getInt(this, "PID_Balancin", "Kd", 0, 0, 5000, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->kdStableData->setText(str);
+
+        w.i32 = QInputDialog::getInt(this, "PID_Balancin", "Ki", 0, 0, 5000, 1, &ok);
+        if(!ok) return false;
+        payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->kiStableData->setText(str);
+
         break;
     case SETPWMLIMIT:
         payload[index++] = SETPWMLIMIT;
         w.i32 = QInputDialog::getInt(this, "Intervalo_PWM", "PWM_MAX: ", 0, 0, 200, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->maxPwmData->setText(str);
 
         w.i32 = QInputDialog::getInt(this, "Intervalo_PWM", "PWM_MIN", 0, 0, 200, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->minPwmData->setText(str);
+
         break;
     case SETLINECTRL:
         payload[index++] = SETLINECTRL;
@@ -621,27 +635,40 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->kpLineData->setText(str);
+
 
         w.i32 = QInputDialog::getInt(this, "PID_Seguidor_Linea", "Kd_line:", 0, -1000, 1000, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->kdLineData->setText(str);
 
         w.i32 = QInputDialog::getInt(this, "PID_Lazo_Velocidad", "Kp_vel:", 0, -1000, 1000, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->kpVelData->setText(str);
+
 
         w.i32 = QInputDialog::getInt(this, "PID_Lazo_Velocidad", "Ki_vel:", 0, -1000, 1000, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->kiVelData->setText(str);
 
 
         w.i32 = QInputDialog::getInt(this, "Angulo Setpoint", "Setpoint base (ej: 100 = 1.0 grado):", 80, -5000, 5000, 10, &ok);
         if(!ok) return false;
         payload[index++] = w.i8[0];
         payload[index++] = w.i8[1];
+        str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
+        ui->setpointData->setText(str);
+
         break;
     default:
         return false; // Comando desconocido
@@ -884,8 +911,4 @@ void MainWindow::on_pushButton_connectUdp_clicked()
             puertoremoto=ui->lineEdit_device_port->text().toInt();
         QUdpSocket1->writeDatagram("r", 1, clientAddress, puertoremoto);
     }
-}
-
-void MainWindow::on_pushButton_sendUdp_clicked()
-{
 }
