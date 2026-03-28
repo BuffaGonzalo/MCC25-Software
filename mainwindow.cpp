@@ -420,6 +420,90 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         }
         break;
     }
+    case GETPIDDATA:{ // Recuerda definir GETPIDDATA = 0xF8
+        // 1. acc_angle_hr
+        w.ui8[0] = datosRx[2];
+        w.ui8[1] = datosRx[3];
+        w.ui8[2] = datosRx[4];
+        w.ui8[3] = datosRx[5];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0')); // Cambiado a w.i32
+        ui->acc_angle_hr_data->setText(str);
+
+        // 2. gyro_delta_hr
+        w.ui8[0] = datosRx[6];
+        w.ui8[1] = datosRx[7];
+        w.ui8[2] = datosRx[8];
+        w.ui8[3] = datosRx[9];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0'));
+        ui->gyro_angle_hr_data->setText(str);
+
+        // 3. current_angle_hr
+        w.ui8[0] = datosRx[10];
+        w.ui8[1] = datosRx[11];
+        w.ui8[2] = datosRx[12];
+        w.ui8[3] = datosRx[13];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0'));
+        ui->current_angle_hr_data->setText(str);
+
+        // 4. setpoint_dinamico
+        w.ui8[0] = datosRx[14];
+        w.ui8[1] = datosRx[15];
+        w.ui8[2] = datosRx[16];
+        w.ui8[3] = datosRx[17];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0'));
+        ui->setpoint_dinamico_data->setText(str);
+
+        // 5. error_vel
+        w.ui8[0] = datosRx[18];
+        w.ui8[1] = datosRx[19];
+        w.ui8[2] = datosRx[20];
+        w.ui8[3] = datosRx[21];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0'));
+        ui->error_vel_data->setText(str);
+
+        // 6. error
+        w.ui8[0] = datosRx[22];
+        w.ui8[1] = datosRx[23];
+        w.ui8[2] = datosRx[24];
+        w.ui8[3] = datosRx[25];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0'));
+        ui->error_data->setText(str);
+
+        // 7. integral
+        w.ui8[0] = datosRx[26];
+        w.ui8[1] = datosRx[27];
+        w.ui8[2] = datosRx[28];
+        w.ui8[3] = datosRx[29];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0'));
+        ui->integral_data->setText(str);
+
+        // 8. derivative
+        w.ui8[0] = datosRx[30];
+        w.ui8[1] = datosRx[31];
+        w.ui8[2] = datosRx[32];
+        w.ui8[3] = datosRx[33];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0'));
+        ui->derivative_data->setText(str);
+
+        // 9. last_error
+        w.ui8[0] = datosRx[34];
+        w.ui8[1] = datosRx[35];
+        w.ui8[2] = datosRx[36];
+        w.ui8[3] = datosRx[37];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0'));
+        ui->last_error_data->setText(str);
+
+        // 10. output
+        w.ui8[0] = datosRx[38];
+        w.ui8[1] = datosRx[39];
+        w.ui8[2] = datosRx[40];
+        w.ui8[3] = datosRx[41];
+        str = QString("%1").arg(w.i32, 5, 10, QChar('0'));
+        ui->output_data->setText(str);
+
+        ui->textBrowserProcessed->append("LOG PID ACTUALIZADO");
+    break;
+    }
     default:
         str = str + "Comando DESCONOCIDO!!!!";
         ui->textBrowserProcessed->append(str);
@@ -569,6 +653,7 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
     case GETADC:
     case GETMPU:
     case GETFIRMWARE:
+    case GETPIDDATA:
         payload[index++] = cmdId;
         break;
     case SETPWM:
@@ -803,10 +888,14 @@ void MainWindow::getData(){
     case 3:
         buf[0]=GETTELEMETRY;
         break;
+    case 4:
+        buf[0]=GETPIDDATA;
+        break;
     }
 
+
     wifiMef++;
-    if (wifiMef > 3) {
+    if (wifiMef > 4) {
         wifiMef = 1;
     }
 

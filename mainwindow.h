@@ -138,6 +138,7 @@ private:
         SETPWMLIMIT=0xF6,
         SETLINECTRL=0xF7,
         GETTELEMETRY=0xF8,
+        GETPIDDATA=0xF9,
         UNKNOWCMD=0xFF,
         GETFLANKS=0xA8,
         POSITION=0xA9,
