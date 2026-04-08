@@ -43,8 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox_CMD->addItem("GETADC", 0xF3);
     ui->comboBox_CMD->addItem("SETPWM", 0xF4);
     ui->comboBox_CMD->addItem("SETPID", 0xF5);
-    ui->comboBox_CMD->addItem("SETPWMLIMIT", 0xF6);
-    ui->comboBox_CMD->addItem("SETSPEED", 0xF7);
+    ui->comboBox_CMD->addItem("SETPIDLINE", 0xF8);
+    ui->comboBox_CMD->addItem("GETINTERNALDATA", 0xF9);
     ui->comboBox_CMD->addItem("*", 0xA9);
 
     //inicializamos
@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     runtimeTimer.start();
 
     timer1->start(100);
-    timer2->start(50);
+    timer2->start(200);
 }
 
 MainWindow::~MainWindow()
@@ -376,7 +376,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             ui->textBrowserProcessed->append(str);
         }
         break;
-    case GETPIDDATA: {
+    case GETINTERNALDATA: {
         // --- 1. Bloque de 32 Bits (Bytes 2 al 37) ---
         w.ui8[0] = datosRx[2]; w.ui8[1] = datosRx[3]; w.ui8[2] = datosRx[4]; w.ui8[3] = datosRx[5];
         ui->acc_angle_hr_data->setText(QString("%1").arg(w.i32));
@@ -388,23 +388,23 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         ui->current_angle_hr_data->setText(QString("%1").arg(w.i32));
         ui->current_angle_data->setText(QString("%1").arg(w.i32/100));
 
+        // setpoint_dinamico FUE ELIMINADO. Los datos se desplazan, ahora 'error' está en los bytes 14-17.
         w.ui8[0] = datosRx[14]; w.ui8[1] = datosRx[15]; w.ui8[2] = datosRx[16]; w.ui8[3] = datosRx[17];
-        ui->setpoint_dinamico_data->setText(QString("%1").arg(w.i32));
-
-        w.ui8[0] = datosRx[18]; w.ui8[1] = datosRx[19]; w.ui8[2] = datosRx[20]; w.ui8[3] = datosRx[21];
         ui->error_data->setText(QString("%1").arg(w.i32));
 
-        w.ui8[0] = datosRx[22]; w.ui8[1] = datosRx[23]; w.ui8[2] = datosRx[24]; w.ui8[3] = datosRx[25];
+        w.ui8[0] = datosRx[18]; w.ui8[1] = datosRx[19]; w.ui8[2] = datosRx[20]; w.ui8[3] = datosRx[21];
         ui->integral_data->setText(QString("%1").arg(w.i32));
 
-        w.ui8[0] = datosRx[26]; w.ui8[1] = datosRx[27]; w.ui8[2] = datosRx[28]; w.ui8[3] = datosRx[29];
+        w.ui8[0] = datosRx[22]; w.ui8[1] = datosRx[23]; w.ui8[2] = datosRx[24]; w.ui8[3] = datosRx[25];
         ui->derivative_data->setText(QString("%1").arg(w.i32));
 
-        w.ui8[0] = datosRx[30]; w.ui8[1] = datosRx[31]; w.ui8[2] = datosRx[32]; w.ui8[3] = datosRx[33];
+        w.ui8[0] = datosRx[26]; w.ui8[1] = datosRx[27]; w.ui8[2] = datosRx[28]; w.ui8[3] = datosRx[29];
         ui->output_data->setText(QString("%1").arg(w.i32));
 
-        w.ui8[0] = datosRx[34]; w.ui8[1] = datosRx[35]; w.ui8[2] = datosRx[36]; w.ui8[3] = datosRx[37];
+        w.ui8[0] = datosRx[30]; w.ui8[1] = datosRx[31]; w.ui8[2] = datosRx[32]; w.ui8[3] = datosRx[33];
         ui->setpointData->setText(QString("%1").arg(w.i32));
+
+        // NOTA: Los bytes 34 a 37 se ignoran (relleno de ceros)
 
         // --- 2. Bloque de 16 Bits (Bytes 38 al 47) ---
         w.ui8[0] = datosRx[38]; w.ui8[1] = datosRx[39];
@@ -416,19 +416,46 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[0] = datosRx[42]; w.ui8[1] = datosRx[43];
         ui->kdStableData->setText(QString("%1").arg(w.i16[0]));
 
-        // --- DATOS DE LA RAMPA (Sin rastro de Kick) ---
-        w.ui8[0] = datosRx[44]; w.ui8[1] = datosRx[45];
-        ui->ramp_step_data->setText(QString("%1").arg(w.i16[0]));
-
-        w.ui8[0] = datosRx[46]; w.ui8[1] = datosRx[47];
-        ui->max_offset_data->setText(QString("%1").arg(w.i16[0]));
+        // ramp_step y max_offset FUERON ELIMINADOS. Los bytes 44 a 47 se ignoran.
 
         // --- 3. Bloque de 8 Bits (Bytes 48 y 49) ---
         ui->maxPwmData->setText(QString().number(datosRx[48]));
         ui->minPwmData->setText(QString().number(datosRx[49]));
 
-        ui->impulseLenght_data->setText(QString().number(datosRx[50]));
+        // --- 4. Bloque de Datos Seguidor de Línea (A partir del byte 50) ---
+        /*
+        // sum_sensors (32 bits)
+        w.ui8[0] = datosRx[50]; w.ui8[1] = datosRx[51]; w.ui8[2] = datosRx[52]; w.ui8[3] = datosRx[53];
+        ui->sum_sensors_data->setText(QString("%1").arg(w.i32));
 
+        // error_linea (32 bits)
+        w.ui8[0] = datosRx[54]; w.ui8[1] = datosRx[55]; w.ui8[2] = datosRx[56]; w.ui8[3] = datosRx[57];
+        ui->error_linea_data->setText(QString("%1").arg(w.i32));
+
+        // abs_error (32 bits)
+        w.ui8[0] = datosRx[58]; w.ui8[1] = datosRx[59]; w.ui8[2] = datosRx[60]; w.ui8[3] = datosRx[61];
+        ui->abs_error_data->setText(QString("%1").arg(w.i32));
+
+        // linear_term (32 bits)
+        w.ui8[0] = datosRx[62]; w.ui8[1] = datosRx[63]; w.ui8[2] = datosRx[64]; w.ui8[3] = datosRx[65];
+        ui->linear_term_data->setText(QString("%1").arg(w.i32));
+
+        // quad_term (32 bits)
+        w.ui8[0] = datosRx[66]; w.ui8[1] = datosRx[67]; w.ui8[2] = datosRx[68]; w.ui8[3] = datosRx[69];
+        ui->quad_term_data->setText(QString("%1").arg(w.i32));
+
+        // turn_offset (32 bits)
+        w.ui8[0] = datosRx[70]; w.ui8[1] = datosRx[71]; w.ui8[2] = datosRx[72]; w.ui8[3] = datosRx[73];
+        ui->turn_offset_data->setText(QString("%1").arg(w.i32));
+
+        // Kp_line (16 bits)
+        w.ui8[0] = datosRx[74]; w.ui8[1] = datosRx[75];
+        ui->kp_line_data->setText(QString("%1").arg(w.i16[0]));
+
+        // Kq_line (16 bits)
+        w.ui8[0] = datosRx[76]; w.ui8[1] = datosRx[77];
+        ui->kq_line_data->setText(QString("%1").arg(w.i16[0]));
+        */
         ui->textBrowserProcessed->append("TELEMETRÍA ACTUALIZADA");
         break;
     }
@@ -581,7 +608,7 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
     case GETADC:
     case GETMPU:
     case GETFIRMWARE:
-    case GETPIDDATA:
+    case GETINTERNALDATA:
         payload[index++] = cmdId;
         break;
     case SETPWM:
@@ -663,6 +690,20 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         payload[index++] = w.ui8[0];
 
         break;
+    case SETPIDLINE:
+        payload[index++] = 0xFA;
+
+        w.i32 = QInputDialog::getInt(this, "PID Seguidor Linea", "Kp Linea:", 15, 0, 5000, 1, &ok);
+        if(!ok) return false;
+        payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
+
+        w.i32 = QInputDialog::getInt(this, "PID Seguidor Linea", "Kq (Cuadratico) Linea:", 8, 0, 5000, 1, &ok);
+        if(!ok) return false;
+        payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
+        break;
+
     default:
         return false; // Comando desconocido
     }
@@ -794,7 +835,7 @@ void MainWindow::getData(){
         buf[0]=GETADC;
         break;
     case 3:
-        buf[0]=GETPIDDATA;
+        buf[0]=GETINTERNALDATA;
         break;
     }
 
