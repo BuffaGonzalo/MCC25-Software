@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox_CMD->addItem("SETSPEED", 0xF7);
     ui->comboBox_CMD->addItem("SETPIDLINE", 0xF8);
     ui->comboBox_CMD->addItem("GETINTERNALDATA", 0xF9);
+    ui->comboBox_CMD->addItem("SETOFFSET", 0xFA);
     ui->comboBox_CMD->addItem("*", 0xA9);
 
     //inicializamos
@@ -373,9 +374,15 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             ui->textBrowserProcessed->append(str);
         }
         break;
-    case SETSPEED:
+    case SETSETPOINT:
         if(datosRx[2]==ACK){
             str="MODIFICACION PARAMETROS PID!!!";
+            ui->textBrowserProcessed->append(str);
+        }
+        break;
+    case SETOFFSET:
+        if(datosRx[2]==ACK){
+            str="MODIFICACION DE OFFSET!!!";
             ui->textBrowserProcessed->append(str);
         }
         break;
@@ -461,6 +468,13 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         // Kq_line (16 bits) - En tu UI está nombrado como kd_line_data
         w.ui8[0] = datosRx[76]; w.ui8[1] = datosRx[77];
         ui->kq_line_data->setText(QString("%1").arg(w.i16[0]));
+
+        // --- NUEVOS OFFSETS (Bytes 78 al 81) ---
+        w.ui8[0] = datosRx[78]; w.ui8[1] = datosRx[79];
+        ui->left_offset_data->setText(QString("%1").arg(w.i16[0]));
+
+        w.ui8[0] = datosRx[80]; w.ui8[1] = datosRx[81];
+        ui->right_offset_data->setText(QString("%1").arg(w.i16[0]));
 
         //internal_data->actualizarDatosLinea(temp_sum, temp_err, temp_abs_err, temp_lin, temp_quad, temp_offset, temp_kp, temp_kq);
         ui->textBrowserProcessed->append("TELEMETRÍA ACTUALIZADA");
@@ -664,8 +678,8 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         payload[index++] = w.ui8[0];
 
         break;
-    case SETSPEED:
-        payload[index++] = SETSPEED;
+    case SETSETPOINT:
+        payload[index++] = SETSETPOINT;
 
         // 3. Setpoint Base
         w.i32 = QInputDialog::getInt(this, "Angulo Equilibrio", "Setpoint base (ej: -150):", -150, -5000, 5000, 10, &ok);
@@ -687,7 +701,19 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];
         break;
+    case SETOFFSET:
+        payload[index++] = SETOFFSET;
 
+        w.i32 = QInputDialog::getInt(this, "Offsets Ruedas", "Offset Izquierda:", -5, -100, 100, 1, &ok);
+        if(!ok) return false;
+        payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
+
+        w.i32 = QInputDialog::getInt(this, "Offsets Ruedas", "Offset Derecha:", 0, -100, 100, 1, &ok);
+        if(!ok) return false;
+        payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
+        break;
     default:
         return false; // Comando desconocido
     }

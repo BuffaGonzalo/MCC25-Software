@@ -419,7 +419,7 @@
      <rect>
       <x>890</x>
       <y>40</y>
-      <width>233</width>
+      <width>181</width>
       <height>605</height>
      </rect>
     </property>
@@ -574,6 +574,56 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QLabel" name="right_offset">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>RIGHT_OFFSET</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="right_offset_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="maxPwm_2">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>LEFT_OFFSET</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="left_offset_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QLabel" name="label_sensors_3">
@@ -600,7 +650,7 @@
       <x>530</x>
       <y>50</y>
       <width>321</width>
-      <height>351</height>
+      <height>361</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">

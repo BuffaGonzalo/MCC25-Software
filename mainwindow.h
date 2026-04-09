@@ -138,9 +138,10 @@ private:
         SETPWM=0xF4,
         SETPID=0XF5,
         SETPWMLIMIT=0xF6,
-        SETSPEED=0xF7,
+        SETSETPOINT=0xF7,
         SETPIDLINE = 0xF8,
         GETINTERNALDATA = 0xF9,
+        SETOFFSET = 0xFA,
         UNKNOWCMD=0xFF,
         OTHERS
     }_eCmd;
