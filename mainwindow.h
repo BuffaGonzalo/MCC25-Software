@@ -79,6 +79,8 @@ private slots:
 
     bool eventFilter(QObject *watched, QEvent *event);
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *QSerialPort1;

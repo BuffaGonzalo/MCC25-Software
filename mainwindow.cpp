@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "internal_data.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox_CMD->addItem("GETADC", 0xF3);
     ui->comboBox_CMD->addItem("SETPWM", 0xF4);
     ui->comboBox_CMD->addItem("SETPID", 0xF5);
+    ui->comboBox_CMD->addItem("SETPWMLIMIT", 0xF6);
+    ui->comboBox_CMD->addItem("SETSPEED", 0xF7);
     ui->comboBox_CMD->addItem("SETPIDLINE", 0xF8);
     ui->comboBox_CMD->addItem("GETINTERNALDATA", 0xF9);
     ui->comboBox_CMD->addItem("*", 0xA9);
@@ -423,7 +426,10 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         ui->minPwmData->setText(QString().number(datosRx[49]));
 
         // --- 4. Bloque de Datos Seguidor de Línea (A partir del byte 50) ---
-        /*
+
+        // 1. Extraemos todos los datos a variables temporales
+        // --- 4. Bloque de Datos Seguidor de Línea (A partir del byte 50) ---
+
         // sum_sensors (32 bits)
         w.ui8[0] = datosRx[50]; w.ui8[1] = datosRx[51]; w.ui8[2] = datosRx[52]; w.ui8[3] = datosRx[53];
         ui->sum_sensors_data->setText(QString("%1").arg(w.i32));
@@ -452,10 +458,11 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[0] = datosRx[74]; w.ui8[1] = datosRx[75];
         ui->kp_line_data->setText(QString("%1").arg(w.i16[0]));
 
-        // Kq_line (16 bits)
+        // Kq_line (16 bits) - En tu UI está nombrado como kd_line_data
         w.ui8[0] = datosRx[76]; w.ui8[1] = datosRx[77];
         ui->kq_line_data->setText(QString("%1").arg(w.i16[0]));
-        */
+
+        //internal_data->actualizarDatosLinea(temp_sum, temp_err, temp_abs_err, temp_lin, temp_quad, temp_offset, temp_kp, temp_kq);
         ui->textBrowserProcessed->append("TELEMETRÍA ACTUALIZADA");
         break;
     }
@@ -660,38 +667,15 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
     case SETSPEED:
         payload[index++] = SETSPEED;
 
-        // 1. Ramp Step
-        w.i32 = QInputDialog::getInt(this, "Config Rampa", "Ramp Step (ej: 4):", 10, 1, 500, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
-        // 2. Max Offset
-        w.i32 = QInputDialog::getInt(this, "Config Rampa", "Max Offset (ej: 250):", 200, 0, 10000, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
         // 3. Setpoint Base
         w.i32 = QInputDialog::getInt(this, "Angulo Equilibrio", "Setpoint base (ej: -150):", -150, -5000, 5000, 10, &ok);
         if(!ok) return false;
         payload[index++] = w.i8[0];
         payload[index++] = w.i8[1];
 
-        // 4. Dirección / Custom Speed
-        w.i32 = QInputDialog::getInt(this, "Movimiento", "Direccion (-1=Av, 1=Re, 0=Stop):", -1, -10000, 10000, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.i8[0];
-        payload[index++] = w.i8[1];
-
-        // 5. Duración del Impulso (NUEVO PARAMETRO)
-        w.i32 = QInputDialog::getInt(this, "Dedo Digital", "Ciclos de pulso (ej: 6 = 120ms):", 6, 0, 100, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-
         break;
     case SETPIDLINE:
-        payload[index++] = 0xFA;
+        payload[index++] = SETPIDLINE;
 
         w.i32 = QInputDialog::getInt(this, "PID Seguidor Linea", "Kp Linea:", 15, 0, 5000, 1, &ok);
         if(!ok) return false;
@@ -947,3 +931,8 @@ void MainWindow::on_pushButton_connectUdp_clicked()
         QUdpSocket1->writeDatagram("r", 1, clientAddress, puertoremoto);
     }
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+}
+

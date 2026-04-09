@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1269</width>
-    <height>820</height>
+    <width>1426</width>
+    <height>826</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -500,56 +500,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="ramp_step">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>RAMP_STEP</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="ramp_step_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>RAMP_DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="max_offset">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>TARGET_OFFSET</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="max_offset_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>OFFSET_DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="setpoint">
        <property name="font">
         <font>
@@ -571,31 +521,6 @@
        </property>
        <property name="text">
         <string>SETPOINT_DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="impulseLenght">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IMPULSE_LENGHT</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="impulseLenght_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>IMPULSE_LENGHT_DATA</string>
        </property>
       </widget>
      </item>
@@ -1081,7 +1006,7 @@
       <x>1080</x>
       <y>20</y>
       <width>20</width>
-      <height>721</height>
+      <height>631</height>
      </rect>
     </property>
     <property name="orientation">
@@ -1343,6 +1268,262 @@
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>680</y>
+      <width>90</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>DATA FL</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>1280</x>
+      <y>40</y>
+      <width>130</width>
+      <height>605</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_8">
+     <item>
+      <widget class="QLabel" name="kp_line">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>kp_line</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kp_line_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kq_line">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>kd_line</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="kq_line_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="sum_sensors">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>sum_sensors</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="sum_sensors_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="error_linea">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>error_linea</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="error_linea_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="abs_error">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>abs_error</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="abs_error_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="linear_term">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>linear_term</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="linear_term_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="quad_term">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>quad_term</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="quad_term_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="turn_offset">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>turn_offset</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="turn_offset_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="Line" name="line_7">
+    <property name="geometry">
+     <rect>
+      <x>1240</x>
+      <y>10</y>
+      <width>20</width>
+      <height>631</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Orientation::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_sensors_5">
+    <property name="geometry">
+     <rect>
+      <x>1270</x>
+      <y>10</y>
+      <width>141</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>LINE_PID</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
@@ -1350,7 +1531,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1269</width>
+     <width>1426</width>
      <height>25</height>
     </rect>
    </property>

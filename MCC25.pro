@@ -11,15 +11,18 @@ CONFIG += c++17
 
 SOURCES += \
     graphics.cpp \
+    internal_data.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     graphics.h \
+    internal_data.h \
     mainwindow.h
 
 FORMS += \
     graphics.ui \
+    internal_data.ui \
     mainwindow.ui
 
 # Default rules for deployment.
