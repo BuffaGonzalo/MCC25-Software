@@ -1316,6 +1316,31 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QLabel" name="custom_turn">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>custom_turn</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="custom_turn_data">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>DATA</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QPushButton" name="pushButton">

@@ -43,12 +43,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox_CMD->addItem("GETMPU", 0xF2);
     ui->comboBox_CMD->addItem("GETADC", 0xF3);
     ui->comboBox_CMD->addItem("SETPWM", 0xF4);
-    ui->comboBox_CMD->addItem("SETPID", 0xF5);
+    ui->comboBox_CMD->addItem("SETPIDBALANCE", 0xF5);
     ui->comboBox_CMD->addItem("SETPWMLIMIT", 0xF6);
-    ui->comboBox_CMD->addItem("SETSPEED", 0xF7);
+    ui->comboBox_CMD->addItem("SETSETPOINT", 0xF7);
     ui->comboBox_CMD->addItem("SETPIDLINE", 0xF8);
     ui->comboBox_CMD->addItem("GETINTERNALDATA", 0xF9);
     ui->comboBox_CMD->addItem("SETOFFSET", 0xFA);
+    ui->comboBox_CMD->addItem("SETCUSTOMTURN", 0xFB);
     ui->comboBox_CMD->addItem("*", 0xA9);
 
     //inicializamos
@@ -476,6 +477,9 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[0] = datosRx[80]; w.ui8[1] = datosRx[81];
         ui->right_offset_data->setText(QString("%1").arg(w.i16[0]));
 
+        w.ui8[0] = datosRx[82]; w.ui8[1] = datosRx[83];
+        ui->custom_turn_data->setText(QString("%1").arg(w.i16[0]));
+
         //internal_data->actualizarDatosLinea(temp_sum, temp_err, temp_abs_err, temp_lin, temp_quad, temp_offset, temp_kp, temp_kq);
         ui->textBrowserProcessed->append("TELEMETRÍA ACTUALIZADA");
         break;
@@ -710,6 +714,14 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         payload[index++] = w.ui8[1];
 
         w.i32 = QInputDialog::getInt(this, "Offsets Ruedas", "Offset Derecha:", 0, -100, 100, 1, &ok);
+        if(!ok) return false;
+        payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
+        break;
+    case SETCUSTOMTURN: // SETCUSTOMTURN
+        payload[index++] = SETCUSTOMTURN;
+
+        w.i32 = QInputDialog::getInt(this, "Límite de Giro", "Custom Turn (Max PWM para girar):", 20, 0, 100, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];

@@ -142,6 +142,7 @@ private:
         SETPIDLINE = 0xF8,
         GETINTERNALDATA = 0xF9,
         SETOFFSET = 0xFA,
+        SETCUSTOMTURN = 0xFB,
         UNKNOWCMD=0xFF,
         OTHERS
     }_eCmd;
