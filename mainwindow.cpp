@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox_CMD->addItem("GETINTERNALDATA", 0xF9);
     ui->comboBox_CMD->addItem("SETOFFSET", 0xFA);
     ui->comboBox_CMD->addItem("SETCUSTOMTURN", 0xFB);
+    ui->comboBox_CMD->addItem("SETSPEED", 0xFC);
     ui->comboBox_CMD->addItem("*", 0xA9);
 
     //inicializamos
@@ -411,10 +412,10 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
 
         w.ui8[0] = datosRx[26]; w.ui8[1] = datosRx[27]; w.ui8[2] = datosRx[28]; w.ui8[3] = datosRx[29];
         ui->output_data->setText(QString("%1").arg(w.i32));
+        // ... [El bloque 1 (32 Bits) desde el byte 2 al 33 queda exactamente igual] ...
 
         w.ui8[0] = datosRx[30]; w.ui8[1] = datosRx[31]; w.ui8[2] = datosRx[32]; w.ui8[3] = datosRx[33];
         ui->setpointData->setText(QString("%1").arg(w.i32));
-
         // NOTA: Los bytes 34 a 37 se ignoran (relleno de ceros)
 
         // --- 2. Bloque de 16 Bits (Bytes 38 al 47) ---
@@ -427,60 +428,62 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[0] = datosRx[42]; w.ui8[1] = datosRx[43];
         ui->kdStableData->setText(QString("%1").arg(w.i16[0]));
 
-        // ramp_step y max_offset FUERON ELIMINADOS. Los bytes 44 a 47 se ignoran.
+        // ¡AQUI ENTRAN LOS NUEVOS LÍMITES PWM DE 16 BITS!
+        w.ui8[0] = datosRx[44]; w.ui8[1] = datosRx[45];
+        ui->maxPwmData->setText(QString("%1").arg(w.i16[0]));
 
-        // --- 3. Bloque de 8 Bits (Bytes 48 y 49) ---
-        ui->maxPwmData->setText(QString().number(datosRx[48]));
-        ui->minPwmData->setText(QString().number(datosRx[49]));
+        w.ui8[0] = datosRx[46]; w.ui8[1] = datosRx[47];
+        ui->minPwmData->setText(QString("%1").arg(w.i16[0]));
 
-        // --- 4. Bloque de Datos Seguidor de Línea (A partir del byte 50) ---
+        // --- EL BLOQUE DE 8 BITS FUE ELIMINADO ---
 
-        // 1. Extraemos todos los datos a variables temporales
-        // --- 4. Bloque de Datos Seguidor de Línea (A partir del byte 50) ---
+        // --- 4. Bloque de Datos Seguidor de Línea (SE CORRE 2 BYTES ARRIBA) ---
 
         // sum_sensors (32 bits)
-        w.ui8[0] = datosRx[50]; w.ui8[1] = datosRx[51]; w.ui8[2] = datosRx[52]; w.ui8[3] = datosRx[53];
+        w.ui8[0] = datosRx[48]; w.ui8[1] = datosRx[49]; w.ui8[2] = datosRx[50]; w.ui8[3] = datosRx[51];
         ui->sum_sensors_data->setText(QString("%1").arg(w.i32));
 
         // error_linea (32 bits)
-        w.ui8[0] = datosRx[54]; w.ui8[1] = datosRx[55]; w.ui8[2] = datosRx[56]; w.ui8[3] = datosRx[57];
+        w.ui8[0] = datosRx[52]; w.ui8[1] = datosRx[53]; w.ui8[2] = datosRx[54]; w.ui8[3] = datosRx[55];
         ui->error_linea_data->setText(QString("%1").arg(w.i32));
 
         // abs_error (32 bits)
-        w.ui8[0] = datosRx[58]; w.ui8[1] = datosRx[59]; w.ui8[2] = datosRx[60]; w.ui8[3] = datosRx[61];
+        w.ui8[0] = datosRx[56]; w.ui8[1] = datosRx[57]; w.ui8[2] = datosRx[58]; w.ui8[3] = datosRx[59];
         ui->abs_error_data->setText(QString("%1").arg(w.i32));
 
         // linear_term (32 bits)
-        w.ui8[0] = datosRx[62]; w.ui8[1] = datosRx[63]; w.ui8[2] = datosRx[64]; w.ui8[3] = datosRx[65];
+        w.ui8[0] = datosRx[60]; w.ui8[1] = datosRx[61]; w.ui8[2] = datosRx[62]; w.ui8[3] = datosRx[63];
         ui->linear_term_data->setText(QString("%1").arg(w.i32));
 
         // quad_term (32 bits)
-        w.ui8[0] = datosRx[66]; w.ui8[1] = datosRx[67]; w.ui8[2] = datosRx[68]; w.ui8[3] = datosRx[69];
+        w.ui8[0] = datosRx[64]; w.ui8[1] = datosRx[65]; w.ui8[2] = datosRx[66]; w.ui8[3] = datosRx[67];
         ui->quad_term_data->setText(QString("%1").arg(w.i32));
 
         // turn_offset (32 bits)
-        w.ui8[0] = datosRx[70]; w.ui8[1] = datosRx[71]; w.ui8[2] = datosRx[72]; w.ui8[3] = datosRx[73];
+        w.ui8[0] = datosRx[68]; w.ui8[1] = datosRx[69]; w.ui8[2] = datosRx[70]; w.ui8[3] = datosRx[71];
         ui->turn_offset_data->setText(QString("%1").arg(w.i32));
 
         // Kp_line (16 bits)
-        w.ui8[0] = datosRx[74]; w.ui8[1] = datosRx[75];
+        w.ui8[0] = datosRx[72]; w.ui8[1] = datosRx[73];
         ui->kp_line_data->setText(QString("%1").arg(w.i16[0]));
 
-        // Kq_line (16 bits) - En tu UI está nombrado como kd_line_data
-        w.ui8[0] = datosRx[76]; w.ui8[1] = datosRx[77];
+        // Kq_line (16 bits)
+        w.ui8[0] = datosRx[74]; w.ui8[1] = datosRx[75];
         ui->kq_line_data->setText(QString("%1").arg(w.i16[0]));
 
-        // --- NUEVOS OFFSETS (Bytes 78 al 81) ---
-        w.ui8[0] = datosRx[78]; w.ui8[1] = datosRx[79];
+        // OFFSETS
+        w.ui8[0] = datosRx[76]; w.ui8[1] = datosRx[77];
         ui->left_offset_data->setText(QString("%1").arg(w.i16[0]));
 
-        w.ui8[0] = datosRx[80]; w.ui8[1] = datosRx[81];
+        w.ui8[0] = datosRx[78]; w.ui8[1] = datosRx[79];
         ui->right_offset_data->setText(QString("%1").arg(w.i16[0]));
 
-        w.ui8[0] = datosRx[82]; w.ui8[1] = datosRx[83];
+        w.ui8[0] = datosRx[80]; w.ui8[1] = datosRx[81];
         ui->custom_turn_data->setText(QString("%1").arg(w.i16[0]));
 
-        //internal_data->actualizarDatosLinea(temp_sum, temp_err, temp_abs_err, temp_lin, temp_quad, temp_offset, temp_kp, temp_kq);
+        w.ui8[0] = datosRx[82]; w.ui8[1] = datosRx[83];
+        ui->frw_speed_data->setText(QString("%1").arg(w.i16[0]));
+
         ui->textBrowserProcessed->append("TELEMETRÍA ACTUALIZADA");
         break;
     }
@@ -636,23 +639,32 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
     case GETINTERNALDATA:
         payload[index++] = cmdId;
         break;
-    case SETPWM:
+    case SETPWM: // O el código HEX correspondiente
         payload[index++] = SETPWM;
-        w.i32 = QInputDialog::getInt(this, "Settear_PWM", "Channel 1:", 0, 0, 100, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
 
-        w.i32 = QInputDialog::getInt(this, "Settear_PWM", "Channel 2:", 0, 0, 100, 1, &ok);
+        // Canal 1
+        w.i32 = QInputDialog::getInt(this, "PWM Manual", "Canal 1 (Adelante Izq) [0-9999]:", 0, 0, 9999, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
 
-        w.i32 = QInputDialog::getInt(this, "Settear_PWM", "Channel 3:", 0, 0, 100, 1, &ok);
+        // Canal 2
+        w.i32 = QInputDialog::getInt(this, "PWM Manual", "Canal 2 (Adelante Der) [0-9999]:", 0, 0, 9999, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
 
-        w.i32 = QInputDialog::getInt(this, "Settear_PWM", "Channel 4:", 0, 0, 100, 1, &ok);
+        // Canal 3
+        w.i32 = QInputDialog::getInt(this, "PWM Manual", "Canal 3 (Atrás Izq) [0-9999]:", 0, 0, 9999, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
+
+        // Canal 4
+        w.i32 = QInputDialog::getInt(this, "PWM Manual", "Canal 4 (Atrás Der) [0-9999]:", 0, 0, 9999, 1, &ok);
+        if(!ok) return false;
+        payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
         break;
     case SETPID:
         payload[index++] = SETPID;
@@ -673,14 +685,17 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         break;
     case SETPWMLIMIT:
         payload[index++] = SETPWMLIMIT;
-        w.i32 = QInputDialog::getInt(this, "Intervalo_PWM", "PWM_MAX: ", 0, 0, 200, 1, &ok);
+
+        // Ahora permitimos valores hasta 9999 y enviamos 16 bits (2 bytes)
+        w.i32 = QInputDialog::getInt(this, "Intervalo_PWM", "PWM_MAX: ", 9999, 0, 9999, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
 
-        w.i32 = QInputDialog::getInt(this, "Intervalo_PWM", "PWM_MIN", 0, 0, 200, 1, &ok);
+        w.i32 = QInputDialog::getInt(this, "Intervalo_PWM", "PWM_MIN", 735, 0, 9999, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
-
+        payload[index++] = w.ui8[1];
         break;
     case SETSETPOINT:
         payload[index++] = SETSETPOINT;
@@ -722,6 +737,15 @@ bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
         payload[index++] = SETCUSTOMTURN;
 
         w.i32 = QInputDialog::getInt(this, "Límite de Giro", "Custom Turn (Max PWM para girar):", 20, 0, 100, 1, &ok);
+        if(!ok) return false;
+        payload[index++] = w.ui8[0];
+        payload[index++] = w.ui8[1];
+        break;
+    case SETSPEED:
+        payload[index++] = SETSPEED;
+
+        // Pedimos el valor (recordar que para ir hacia adelante suele ser negativo, ej: -12)
+        w.i32 = QInputDialog::getInt(this, "Velocidad Feedforward", "Fuerza de avance:", -12, -10000, 10000, 1, &ok);
         if(!ok) return false;
         payload[index++] = w.ui8[0];
         payload[index++] = w.ui8[1];

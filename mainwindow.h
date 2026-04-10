@@ -143,6 +143,7 @@ private:
         GETINTERNALDATA = 0xF9,
         SETOFFSET = 0xFA,
         SETCUSTOMTURN = 0xFB,
+        SETSPEED = 0xFC,
         UNKNOWCMD=0xFF,
         OTHERS
     }_eCmd;
