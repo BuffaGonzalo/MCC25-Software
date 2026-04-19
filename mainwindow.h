@@ -38,11 +38,7 @@ private slots:
 
     void decodeData(uint8_t *datosRx, uint8_t source);
 
-    void sendDataSerial();
-
     void timeOut();
-
-    void sendDataUDP();
 
     void OnUdpRxData();
 
@@ -54,13 +50,7 @@ private slots:
 
     void getData();
 
-    /**
-     * @brief buildPayload - Construye la carga útil del comando leyendo la UI
-     * @param payload - Puntero al buffer donde se guardarán los datos
-     * @param length - Referencia a la variable que guardará la longitud final
-     * @return true si el usuario completó los datos, false si canceló
-     */
-    bool buildPayload(uint8_t *payload, uint8_t &length);
+
 
     /**
      * @brief sendSerial - Comando utilizado para enviar datos por el puerto serial en segundo plano
@@ -77,9 +67,34 @@ private slots:
      */
     void sendUdp(uint8_t *buf, uint8_t length);
 
+    /**
+     * @brief sendCommand - Evalúa qué conexión está abierta (Serial o UDP) y envía la trama.
+     * @param buf - Puntero al buffer de datos
+     * @param length - longitud del comando en bytes
+     */
+    void sendCommand(uint8_t *buf, uint8_t length);
+
     bool eventFilter(QObject *watched, QEvent *event);
 
     void on_pushButton_clicked();
+
+    void on_sendBalanceKp_clicked();
+    void on_sendBalanceKi_clicked();
+    void on_sendBalanceKd_clicked();
+    void on_sendLineKp_clicked();
+    void on_sendLineKd_clicked();
+
+    void on_sendPIDMIN_clicked();
+    void on_sendPIDMAX_clicked();
+    void on_sendSetpoint_clicked();
+    void on_sendAttackSetpoint_clicked();
+
+    void on_sendPWML_clicked();
+    void on_sendPWMR_clicked();
+    void on_sendOFFSETL_clicked();
+    void on_sendOFFSETR_clicked();
+    void on_sendCustomTurn_clicked();
+    void on_sendCounterAngle_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -131,19 +146,36 @@ private:
         UDP=0,
         SERIE=1,
         ACK=0x0D,
-        GETALIVE=0xF0,
-        GETFIRMWARE=0xF1,
-        GETMPU=0xF2,
-        GETADC=0xF3,
-        SETPWM=0xF4,
-        SETPID=0XF5,
-        SETPWMLIMIT=0xF6,
-        SETSETPOINT=0xF7,
-        SETPIDLINE = 0xF8,
-        GETINTERNALDATA = 0xF9,
-        SETOFFSET = 0xFA,
-        SETCUSTOMTURN = 0xFB,
-        SETSPEED = 0xFC,
+
+        GETALIVE=0xA0,
+        GETFIRMWARE=0xA1,
+        GETMPU=0xA2,
+        GETADC=0xA3,
+
+        SETPWML=0xA4, // -> divisible en 2
+        SETPWMR=0xA5,
+
+        SETPWMLIMMAX=0xA6, //-> divisible en max y min
+        SETPWMLIMMIN=0xA7,
+
+        SETBALANCEKP=0XA8, //->kp,kd,ki
+        SETBALANCEKD=0xA9,
+        SETBALANCEKI=0xAA,
+
+        SETSETPOINT=0xAB,
+
+        SETLINEKP=0xAC,
+        SETLINEKD=0xAD,
+
+        GETINTERNALDATA = 0xF9, // ->revision exaustiva
+
+        SETOFFSETL=0xAE,
+        SETOFFSETR=0xAF,
+
+        SETCUSTOMTURN = 0xB0, //Valor de rotacion al seguir linea
+        SETSPEED = 0xB1, //angulo de ataque movimiento
+        SETBKANG = 0xB2, //angulo contra para evitar el aumento de velocidad
+
         UNKNOWCMD=0xFF,
         OTHERS
     }_eCmd;

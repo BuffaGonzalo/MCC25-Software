@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>350</y>
+      <y>270</y>
       <width>78</width>
       <height>20</height>
      </rect>
@@ -58,21 +58,11 @@
      <enum>Qt::Orientation::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox_CMD">
-    <property name="geometry">
-     <rect>
-      <x>13</x>
-      <y>52</y>
-      <width>481</width>
-      <height>28</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_udp">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>173</y>
+      <y>100</y>
       <width>78</width>
       <height>20</height>
      </rect>
@@ -89,8 +79,8 @@
    <widget class="QLabel" name="label_serial">
     <property name="geometry">
      <rect>
-      <x>14</x>
-      <y>88</y>
+      <x>20</x>
+      <y>30</y>
       <width>50</width>
       <height>20</height>
      </rect>
@@ -122,29 +112,11 @@
      <string>SENSORS</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_communications">
-    <property name="geometry">
-     <rect>
-      <x>14</x>
-      <y>24</y>
-      <width>140</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>COMMUNICATIONS</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>380</y>
+      <y>300</y>
       <width>461</width>
       <height>351</height>
      </rect>
@@ -175,7 +147,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>330</y>
+      <y>250</y>
       <width>481</width>
       <height>16</height>
      </rect>
@@ -187,8 +159,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>14</x>
-      <y>117</y>
+      <x>20</x>
+      <y>59</y>
       <width>481</width>
       <height>33</height>
      </rect>
@@ -225,7 +197,7 @@
     <property name="geometry">
      <rect>
       <x>22</x>
-      <y>204</y>
+      <y>131</y>
       <width>471</width>
       <height>111</height>
      </rect>
@@ -362,7 +334,7 @@
      <rect>
       <x>510</x>
       <y>410</y>
-      <width>341</width>
+      <width>361</width>
       <height>16</height>
      </rect>
     </property>
@@ -414,222 +386,10 @@
      <enum>Qt::Orientation::Vertical</enum>
     </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>890</x>
-      <y>40</y>
-      <width>181</width>
-      <height>605</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_5">
-     <item>
-      <widget class="QLabel" name="kpBalancin">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>KP_BALANCIN</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="kpStableData">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>KP_DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="kdBalancin">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>KD_BALANCIN</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="kdStableData">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>KD_DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="kiBalancin">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>KI_BALANCIN</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="kiStableData">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>KI_DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="setpoint">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>SETPOINT</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="setpointData">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>SETPOINT_DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="maxPwm">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>MAX_PWM</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="maxPwmData">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>MAX_PWM_DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="minPwm">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>MIN_PWM</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="minPwmData">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>MIN_PWM_DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="right_offset">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>RIGHT_OFFSET</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="right_offset_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="maxPwm_2">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>LEFT_OFFSET</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="left_offset_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QLabel" name="label_sensors_3">
     <property name="geometry">
      <rect>
-      <x>890</x>
+      <x>1070</x>
       <y>10</y>
       <width>151</width>
       <height>20</height>
@@ -641,16 +401,16 @@
      </font>
     </property>
     <property name="text">
-     <string>VALUES PID</string>
+     <string>MOTORES</string>
     </property>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>50</y>
+      <y>40</y>
       <width>321</width>
-      <height>485</height>
+      <height>361</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -1014,61 +774,12 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QLabel" name="label_sensors_9">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>740</y>
-      <width>461</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_9">
-     <item>
-      <widget class="QLabel" name="lblReflectancia">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Reflectancia</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="lblEstado">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Estado</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="Line" name="line_6">
-    <property name="geometry">
-     <rect>
-      <x>1080</x>
-      <y>20</y>
-      <width>20</width>
-      <height>631</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Orientation::Vertical</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_sensors_4">
-    <property name="geometry">
-     <rect>
-      <x>1100</x>
+      <x>880</x>
       <y>10</y>
-      <width>141</width>
+      <width>151</width>
       <height>20</height>
      </rect>
     </property>
@@ -1078,563 +789,586 @@
      </font>
     </property>
     <property name="text">
-     <string>INTERNAL PID</string>
+     <string>BALANCE</string>
     </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="Line" name="line_6">
     <property name="geometry">
      <rect>
-      <x>1100</x>
-      <y>40</y>
-      <width>130</width>
-      <height>605</height>
+      <x>1050</x>
+      <y>20</y>
+      <width>20</width>
+      <height>721</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_6">
-     <item>
-      <widget class="QLabel" name="acc_angle_hr">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>acc_angle_hr</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="acc_angle_hr_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="gyro_delta_hr">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>gyro_delta_hr</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="gyro_delta_hr_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="setpoint_dinamico">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>setpoint_dinamico</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="setpoint_dinamico_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="error">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>error</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="error_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="current_angle_hr">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>current_angle_hr</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="current_angle_hr_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="current_angle">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>current_angle</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="current_angle_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="integral">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>integral</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="integral_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="derivative">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>derivative</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="derivative_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="output">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>output</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="output_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="custom_turn">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>custom_turn</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="custom_turn_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="orientation">
+     <enum>Qt::Orientation::Vertical</enum>
+    </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QLabel" name="label_sensors_10">
     <property name="geometry">
      <rect>
-      <x>900</x>
-      <y>680</y>
-      <width>90</width>
-      <height>29</height>
+      <x>880</x>
+      <y>250</y>
+      <width>151</width>
+      <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
-     <string>DATA FL</string>
+     <string>LINEA</string>
     </property>
    </widget>
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>1280</x>
-      <y>40</y>
-      <width>130</width>
-      <height>605</height>
+      <x>880</x>
+      <y>270</y>
+      <width>171</width>
+      <height>125</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_8">
+    <layout class="QVBoxLayout" name="verticalLayout_6">
      <item>
-      <widget class="QLabel" name="kp_line">
+      <widget class="QLabel" name="label_sensors_11">
        <property name="font">
         <font>
          <bold>true</bold>
         </font>
        </property>
        <property name="text">
-        <string>kp_line</string>
+        <string>KP</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="kp_line_data">
+      <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="0,0">
+       <item>
+        <widget class="QSpinBox" name="setLineKp"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendLineKp">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_sensors_12">
        <property name="font">
         <font>
-         <pointsize>12</pointsize>
          <bold>true</bold>
         </font>
        </property>
        <property name="text">
-        <string>DATA</string>
+        <string>KD</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="kq_line">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>kd_line</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="kq_line_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="sum_sensors">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>sum_sensors</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="sum_sensors_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="error_linea">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>error_linea</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="error_linea_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="abs_error">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>abs_error</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="abs_error_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="linear_term">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>linear_term</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="linear_term_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="quad_term">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>quad_term</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="quad_term_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="turn_offset">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>turn_offset</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="turn_offset_data">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>DATA</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <item>
+        <widget class="QSpinBox" name="setLineKd"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendLineKd">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
    <widget class="Line" name="line_7">
     <property name="geometry">
      <rect>
-      <x>1240</x>
-      <y>10</y>
-      <width>20</width>
-      <height>631</height>
+      <x>870</x>
+      <y>230</y>
+      <width>191</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="orientation">
-     <enum>Qt::Orientation::Vertical</enum>
+     <enum>Qt::Orientation::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_sensors_5">
+   <widget class="QWidget" name="layoutWidget_3">
     <property name="geometry">
      <rect>
-      <x>1270</x>
-      <y>10</y>
-      <width>141</width>
-      <height>20</height>
+      <x>880</x>
+      <y>470</y>
+      <width>171</width>
+      <height>60</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>LINE_PID</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_8">
+     <item>
+      <widget class="QLabel" name="label_sensors_15">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>SETPOINT - ATAQUE</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_16">
+       <item>
+        <widget class="QSpinBox" name="setAttackSetpoint"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendAttackSetpoint">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
-   <widget class="QLabel" name="frw_speed">
+   <widget class="QWidget" name="layoutWidget_4">
     <property name="geometry">
      <rect>
-      <x>1100</x>
-      <y>690</y>
-      <width>128</width>
-      <height>20</height>
+      <x>1070</x>
+      <y>40</y>
+      <width>171</width>
+      <height>60</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>frw_speed</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_9">
+     <item>
+      <widget class="QLabel" name="label_sensors_16">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>PID LIMIT - MIN</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_17">
+       <item>
+        <widget class="QSpinBox" name="setPIDMIN"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendPIDMIN">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
-   <widget class="QLabel" name="frw_speed_data">
+   <widget class="QWidget" name="layoutWidget_5">
     <property name="geometry">
      <rect>
-      <x>1100</x>
-      <y>717</y>
-      <width>128</width>
-      <height>27</height>
+      <x>1070</x>
+      <y>110</y>
+      <width>171</width>
+      <height>60</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <bold>true</bold>
-     </font>
+    <layout class="QVBoxLayout" name="verticalLayout_10">
+     <item>
+      <widget class="QLabel" name="label_sensors_17">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>PID LIMIT - MAX</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_18">
+       <item>
+        <widget class="QSpinBox" name="setPIDMAX"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendPIDMAX">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_6">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>200</y>
+      <width>171</width>
+      <height>60</height>
+     </rect>
     </property>
-    <property name="text">
-     <string>DATA</string>
+    <layout class="QVBoxLayout" name="verticalLayout_11">
+     <item>
+      <widget class="QLabel" name="label_sensors_18">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>PWM LEFT</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_19">
+       <item>
+        <widget class="QSpinBox" name="setPWML"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendPWML">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_7">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>270</y>
+      <width>171</width>
+      <height>60</height>
+     </rect>
     </property>
+    <layout class="QVBoxLayout" name="verticalLayout_12">
+     <item>
+      <widget class="QLabel" name="label_sensors_19">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>PWM RIGHT</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_20">
+       <item>
+        <widget class="QSpinBox" name="setPWMR"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendPWMR">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>30</y>
+      <width>171</width>
+      <height>190</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <widget class="QLabel" name="label_sensors_6">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KP</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,0">
+       <item>
+        <widget class="QSpinBox" name="setBalanceKp"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendBalanceKp">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_sensors_7">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KD</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_9">
+       <item>
+        <widget class="QSpinBox" name="setBalanceKd"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendBalanceKd">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_sensors_8">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>KD</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_11">
+       <item>
+        <widget class="QSpinBox" name="setBalanceKi"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendBalanceKi">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>400</y>
+      <width>171</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_7">
+     <item>
+      <widget class="QLabel" name="label_sensors_14">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>SETPOINT - ESTATICO</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_15">
+       <item>
+        <widget class="QSpinBox" name="setSetpoint"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendSetpoint">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_8">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>350</y>
+      <width>171</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_13">
+     <item>
+      <widget class="QLabel" name="label_sensors_20">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>OFFSET LEFT</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_21">
+       <item>
+        <widget class="QSpinBox" name="setOFFSETL"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendOFFSETL">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_9">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>420</y>
+      <width>171</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_14">
+     <item>
+      <widget class="QLabel" name="label_sensors_21">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>OFFSET RIGHT</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_22">
+       <item>
+        <widget class="QSpinBox" name="setOFFSETR"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendOFFSETR">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_10">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>610</y>
+      <width>171</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_15">
+     <item>
+      <widget class="QLabel" name="label_sensors_22">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>COUNTER ANGLE</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_23">
+       <item>
+        <widget class="QSpinBox" name="setCounterAngle"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendCounterAngle">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_11">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>540</y>
+      <width>172</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_16">
+     <item>
+      <widget class="QLabel" name="label_sensors_23">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>CUSTOM TURN</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_24">
+       <item>
+        <widget class="QSpinBox" name="setCustomTurn"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendCustomTurn">
+         <property name="text">
+          <string>ENVIAR</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>

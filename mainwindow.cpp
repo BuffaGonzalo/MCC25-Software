@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox_PORT->installEventFilter(this);
 
     //connects del puerto serial
-    connect(ui->pushButton_sendSerial,&QPushButton::clicked, this, &MainWindow::sendDataSerial);
     connect(QSerialPort1,&QSerialPort::readyRead,this,&MainWindow::dataReceived);
 
     //connects de los timers con las funciones
@@ -32,34 +31,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     //connects de udp
     connect(QUdpSocket1,&QUdpSocket::readyRead,this,&MainWindow::OnUdpRxData);
-    connect(ui->pushButton_sendUdp,&QPushButton::clicked,this,&MainWindow::sendDataUDP);
 
     //connect(ui->actionScanPorts, &QAction::triggered, settingPorts,&SettingsDialog::show);
     connect(ui->actionGRAPHICS, &QAction::triggered, myGraphics, &graphics::show);
 
-    //añadimos los comandos
-    ui->comboBox_CMD->addItem("ALIVE", 0xF0);
-    ui->comboBox_CMD->addItem("FIRMWARE", 0xF1);
-    ui->comboBox_CMD->addItem("GETMPU", 0xF2);
-    ui->comboBox_CMD->addItem("GETADC", 0xF3);
-    ui->comboBox_CMD->addItem("SETPWM", 0xF4);
-    ui->comboBox_CMD->addItem("SETPIDBALANCE", 0xF5);
-    ui->comboBox_CMD->addItem("SETPWMLIMIT", 0xF6);
-    ui->comboBox_CMD->addItem("SETSETPOINT", 0xF7);
-    ui->comboBox_CMD->addItem("SETPIDLINE", 0xF8);
-    ui->comboBox_CMD->addItem("GETINTERNALDATA", 0xF9);
-    ui->comboBox_CMD->addItem("SETOFFSET", 0xFA);
-    ui->comboBox_CMD->addItem("SETCUSTOMTURN", 0xFB);
-    ui->comboBox_CMD->addItem("SETSPEED", 0xFC);
-    ui->comboBox_CMD->addItem("*", 0xA9);
+
 
     //inicializamos
     estadoProtocolo=START;
     rxData.timeOut=0;
 
-    //desabilitamos los botones con el fin de que no puedan ser presionados si no esta conectado
-    ui->pushButton_sendUdp->setEnabled(false);
-    ui->pushButton_sendSerial->setEnabled(false);
 
     statusMode = new QLabel(this);
     ui->statusBar->addWidget(statusMode);
@@ -358,135 +339,27 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         ui->ir8_data->setText(str);
 
         break;
-    case SETPWM:
-        if(datosRx[2]==ACK){
-            str="MODIFICACION PARAMETROS PWM - VELOCIDAD MOTOR!!!";
-            ui->textBrowserProcessed->append(str);
-        }
-        break;
-    case SETPID:
-        if(datosRx[2]==ACK){
-            str="MODIFICACION PARAMETROS PID!!!";
-            ui->textBrowserProcessed->append(str);
-        }
-        break;
-    case SETPWMLIMIT:
-        if(datosRx[2]==ACK){
-            str="MODIFICACION VELOCIDAD MAXIMA PID!!!";
-            ui->textBrowserProcessed->append(str);
-        }
-        break;
+    case SETPWML:
+    case SETPWMR:
+    case SETPWMLIMMAX:
+    case SETPWMLIMMIN:
+    case SETBALANCEKP:
+    case SETBALANCEKD:
+    case SETBALANCEKI:
     case SETSETPOINT:
+    case SETLINEKP:
+    case SETLINEKD:
+    case SETOFFSETL:
+    case SETOFFSETR:
+    case SETCUSTOMTURN:
+    case SETSPEED:
+    case SETBKANG:
         if(datosRx[2]==ACK){
-            str="MODIFICACION PARAMETROS PID!!!";
+            str="COMANDO ACEPTADO Y GUARDADO (ACK)!!!";
             ui->textBrowserProcessed->append(str);
         }
         break;
-    case SETOFFSET:
-        if(datosRx[2]==ACK){
-            str="MODIFICACION DE OFFSET!!!";
-            ui->textBrowserProcessed->append(str);
-        }
-        break;
-    case GETINTERNALDATA: {
-        // --- 1. Bloque de 32 Bits (Bytes 2 al 37) ---
-        w.ui8[0] = datosRx[2]; w.ui8[1] = datosRx[3]; w.ui8[2] = datosRx[4]; w.ui8[3] = datosRx[5];
-        ui->acc_angle_hr_data->setText(QString("%1").arg(w.i32));
 
-        w.ui8[0] = datosRx[6]; w.ui8[1] = datosRx[7]; w.ui8[2] = datosRx[8]; w.ui8[3] = datosRx[9];
-        ui->gyro_delta_hr_data->setText(QString("%1").arg(w.i32));
-
-        w.ui8[0] = datosRx[10]; w.ui8[1] = datosRx[11]; w.ui8[2] = datosRx[12]; w.ui8[3] = datosRx[13];
-        ui->current_angle_hr_data->setText(QString("%1").arg(w.i32));
-        ui->current_angle_data->setText(QString("%1").arg(w.i32/100));
-
-        // setpoint_dinamico FUE ELIMINADO. Los datos se desplazan, ahora 'error' está en los bytes 14-17.
-        w.ui8[0] = datosRx[14]; w.ui8[1] = datosRx[15]; w.ui8[2] = datosRx[16]; w.ui8[3] = datosRx[17];
-        ui->error_data->setText(QString("%1").arg(w.i32));
-
-        w.ui8[0] = datosRx[18]; w.ui8[1] = datosRx[19]; w.ui8[2] = datosRx[20]; w.ui8[3] = datosRx[21];
-        ui->integral_data->setText(QString("%1").arg(w.i32));
-
-        w.ui8[0] = datosRx[22]; w.ui8[1] = datosRx[23]; w.ui8[2] = datosRx[24]; w.ui8[3] = datosRx[25];
-        ui->derivative_data->setText(QString("%1").arg(w.i32));
-
-        w.ui8[0] = datosRx[26]; w.ui8[1] = datosRx[27]; w.ui8[2] = datosRx[28]; w.ui8[3] = datosRx[29];
-        ui->output_data->setText(QString("%1").arg(w.i32));
-        // ... [El bloque 1 (32 Bits) desde el byte 2 al 33 queda exactamente igual] ...
-
-        w.ui8[0] = datosRx[30]; w.ui8[1] = datosRx[31]; w.ui8[2] = datosRx[32]; w.ui8[3] = datosRx[33];
-        ui->setpointData->setText(QString("%1").arg(w.i32));
-        // NOTA: Los bytes 34 a 37 se ignoran (relleno de ceros)
-
-        // --- 2. Bloque de 16 Bits (Bytes 38 al 47) ---
-        w.ui8[0] = datosRx[38]; w.ui8[1] = datosRx[39];
-        ui->kpStableData->setText(QString("%1").arg(w.i16[0]));
-
-        w.ui8[0] = datosRx[40]; w.ui8[1] = datosRx[41];
-        ui->kiStableData->setText(QString("%1").arg(w.i16[0]));
-
-        w.ui8[0] = datosRx[42]; w.ui8[1] = datosRx[43];
-        ui->kdStableData->setText(QString("%1").arg(w.i16[0]));
-
-        // ¡AQUI ENTRAN LOS NUEVOS LÍMITES PWM DE 16 BITS!
-        w.ui8[0] = datosRx[44]; w.ui8[1] = datosRx[45];
-        ui->maxPwmData->setText(QString("%1").arg(w.i16[0]));
-
-        w.ui8[0] = datosRx[46]; w.ui8[1] = datosRx[47];
-        ui->minPwmData->setText(QString("%1").arg(w.i16[0]));
-
-        // --- EL BLOQUE DE 8 BITS FUE ELIMINADO ---
-
-        // --- 4. Bloque de Datos Seguidor de Línea (SE CORRE 2 BYTES ARRIBA) ---
-
-        // sum_sensors (32 bits)
-        w.ui8[0] = datosRx[48]; w.ui8[1] = datosRx[49]; w.ui8[2] = datosRx[50]; w.ui8[3] = datosRx[51];
-        ui->sum_sensors_data->setText(QString("%1").arg(w.i32));
-
-        // error_linea (32 bits)
-        w.ui8[0] = datosRx[52]; w.ui8[1] = datosRx[53]; w.ui8[2] = datosRx[54]; w.ui8[3] = datosRx[55];
-        ui->error_linea_data->setText(QString("%1").arg(w.i32));
-
-        // abs_error (32 bits)
-        w.ui8[0] = datosRx[56]; w.ui8[1] = datosRx[57]; w.ui8[2] = datosRx[58]; w.ui8[3] = datosRx[59];
-        ui->abs_error_data->setText(QString("%1").arg(w.i32));
-
-        // linear_term (32 bits)
-        w.ui8[0] = datosRx[60]; w.ui8[1] = datosRx[61]; w.ui8[2] = datosRx[62]; w.ui8[3] = datosRx[63];
-        ui->linear_term_data->setText(QString("%1").arg(w.i32));
-
-        // quad_term (32 bits)
-        w.ui8[0] = datosRx[64]; w.ui8[1] = datosRx[65]; w.ui8[2] = datosRx[66]; w.ui8[3] = datosRx[67];
-        ui->quad_term_data->setText(QString("%1").arg(w.i32));
-
-        // turn_offset (32 bits)
-        w.ui8[0] = datosRx[68]; w.ui8[1] = datosRx[69]; w.ui8[2] = datosRx[70]; w.ui8[3] = datosRx[71];
-        ui->turn_offset_data->setText(QString("%1").arg(w.i32));
-
-        // Kp_line (16 bits)
-        w.ui8[0] = datosRx[72]; w.ui8[1] = datosRx[73];
-        ui->kp_line_data->setText(QString("%1").arg(w.i16[0]));
-
-        // Kq_line (16 bits)
-        w.ui8[0] = datosRx[74]; w.ui8[1] = datosRx[75];
-        ui->kq_line_data->setText(QString("%1").arg(w.i16[0]));
-
-        // OFFSETS
-        w.ui8[0] = datosRx[76]; w.ui8[1] = datosRx[77];
-        ui->left_offset_data->setText(QString("%1").arg(w.i16[0]));
-
-        w.ui8[0] = datosRx[78]; w.ui8[1] = datosRx[79];
-        ui->right_offset_data->setText(QString("%1").arg(w.i16[0]));
-
-        w.ui8[0] = datosRx[80]; w.ui8[1] = datosRx[81];
-        ui->custom_turn_data->setText(QString("%1").arg(w.i16[0]));
-
-        w.ui8[0] = datosRx[82]; w.ui8[1] = datosRx[83];
-        ui->frw_speed_data->setText(QString("%1").arg(w.i16[0]));
-
-        ui->textBrowserProcessed->append("TELEMETRÍA ACTUALIZADA");
-        break;
-    }
     default:
         str = str + "Comando DESCONOCIDO!!!!";
         ui->textBrowserProcessed->append(str);
@@ -602,161 +475,25 @@ void MainWindow::sendUdp(uint8_t *buf, uint8_t length){
     ui->textBrowserUnProcessed->append("PC--UDP-->MBED ( " + str + " )");
 }
 
-void MainWindow::sendDataSerial(){
-    uint8_t payload[256];
-    uint8_t length = 0;
+void MainWindow::sendCommand(uint8_t *buf, uint8_t length) {
+    bool sent = false;
 
-    // Si el usuario completa los datos correctamente, lo enviamos
-    if (buildPayload(payload, length)) {
-        sendSerial(payload, length);
-        ui->textBrowserProcessed->append("***COMANDO ENVIADO POR SERIAL***");
+    if (QSerialPort1->isOpen()) {
+        sendSerial(buf, length);
+        sent = true;
+    }
+
+    if (QUdpSocket1->isOpen()) {
+        sendUdp(buf, length);
+        sent = true;
+    }
+
+    if (!sent) {
+        ui->textBrowserProcessed->append("***ERROR: NINGUNA CONEXIÓN ABIERTA***");
     }
 }
 
-void MainWindow::sendDataUDP(){
-    uint8_t payload[256];
-    uint8_t length = 0;
 
-    // Si el usuario completa los datos correctamente, lo enviamos
-    if (buildPayload(payload, length)) {
-        sendUdp(payload, length);
-        ui->textBrowserProcessed->append("***COMANDO ENVIADO POR UDP***");
-    }
-}
-
-bool MainWindow::buildPayload(uint8_t *payload, uint8_t &length) {
-    uint8_t cmdId = ui->comboBox_CMD->currentData().toInt();
-    _udat w;
-    QString str;
-    bool ok;
-    uint8_t index = 0;
-
-    switch (cmdId) {
-    case GETALIVE:
-    case GETADC:
-    case GETMPU:
-    case GETFIRMWARE:
-    case GETINTERNALDATA:
-        payload[index++] = cmdId;
-        break;
-    case SETPWM: // O el código HEX correspondiente
-        payload[index++] = SETPWM;
-
-        // Canal 1
-        w.i32 = QInputDialog::getInt(this, "PWM Manual", "Canal 1 (Adelante Izq) [0-9999]:", 0, 0, 9999, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
-        // Canal 2
-        w.i32 = QInputDialog::getInt(this, "PWM Manual", "Canal 2 (Adelante Der) [0-9999]:", 0, 0, 9999, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
-        // Canal 3
-        w.i32 = QInputDialog::getInt(this, "PWM Manual", "Canal 3 (Atrás Izq) [0-9999]:", 0, 0, 9999, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
-        // Canal 4
-        w.i32 = QInputDialog::getInt(this, "PWM Manual", "Canal 4 (Atrás Der) [0-9999]:", 0, 0, 9999, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-        break;
-    case SETPID:
-        payload[index++] = SETPID;
-        w.i32 = QInputDialog::getInt(this, "PID_Balancin", "Kp", 0, 0, 5000, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
-        w.i32 = QInputDialog::getInt(this, "PID_Balancin", "Kd", 0, 0, 5000, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
-        w.i32 = QInputDialog::getInt(this, "PID_Balancin", "Ki", 0, 0, 5000, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-        break;
-    case SETPWMLIMIT:
-        payload[index++] = SETPWMLIMIT;
-
-        // Ahora permitimos valores hasta 9999 y enviamos 16 bits (2 bytes)
-        w.i32 = QInputDialog::getInt(this, "Intervalo_PWM", "PWM_MAX: ", 9999, 0, 9999, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
-        w.i32 = QInputDialog::getInt(this, "Intervalo_PWM", "PWM_MIN", 735, 0, 9999, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-        break;
-    case SETSETPOINT:
-        payload[index++] = SETSETPOINT;
-
-        // 3. Setpoint Base
-        w.i32 = QInputDialog::getInt(this, "Angulo Equilibrio", "Setpoint base (ej: -150):", -150, -5000, 5000, 10, &ok);
-        if(!ok) return false;
-        payload[index++] = w.i8[0];
-        payload[index++] = w.i8[1];
-
-        break;
-    case SETPIDLINE:
-        payload[index++] = SETPIDLINE;
-
-        w.i32 = QInputDialog::getInt(this, "PID Seguidor Linea", "Kp Linea:", 15, 0, 5000, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
-        w.i32 = QInputDialog::getInt(this, "PID Seguidor Linea", "Kq (Cuadratico) Linea:", 8, 0, 5000, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-        break;
-    case SETOFFSET:
-        payload[index++] = SETOFFSET;
-
-        w.i32 = QInputDialog::getInt(this, "Offsets Ruedas", "Offset Izquierda:", -5, -100, 100, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-
-        w.i32 = QInputDialog::getInt(this, "Offsets Ruedas", "Offset Derecha:", 0, -100, 100, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-        break;
-    case SETCUSTOMTURN: // SETCUSTOMTURN
-        payload[index++] = SETCUSTOMTURN;
-
-        w.i32 = QInputDialog::getInt(this, "Límite de Giro", "Custom Turn (Max PWM para girar):", 20, 0, 100, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-        break;
-    case SETSPEED:
-        payload[index++] = SETSPEED;
-
-        // Pedimos el valor (recordar que para ir hacia adelante suele ser negativo, ej: -12)
-        w.i32 = QInputDialog::getInt(this, "Velocidad Feedforward", "Fuerza de avance:", -12, -10000, 10000, 1, &ok);
-        if(!ok) return false;
-        payload[index++] = w.ui8[0];
-        payload[index++] = w.ui8[1];
-        break;
-    default:
-        return false; // Comando desconocido
-    }
-
-    length = index; // Guardamos la cantidad de bytes que conforman el payload
-    return true;
-}
 
 void MainWindow::timeOut(){
     if(rxData.timeOut){
@@ -998,3 +735,182 @@ void MainWindow::on_pushButton_clicked()
 {
 }
 
+void MainWindow::on_sendBalanceKp_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETBALANCEKP;
+    w.i32 = ui->setBalanceKp->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***KP BALANCÍN ACTUALIZADO***");
+}
+
+void MainWindow::on_sendBalanceKi_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETBALANCEKI;
+    w.i32 = ui->setBalanceKi->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***KI BALANCÍN ACTUALIZADO***");
+}
+
+void MainWindow::on_sendBalanceKd_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETBALANCEKD;
+    w.i32 = ui->setBalanceKd->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***KD BALANCÍN ACTUALIZADO***");
+}
+
+void MainWindow::on_sendLineKp_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETLINEKP;
+    w.i32 = ui->setLineKp->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***KP LÍNEA ACTUALIZADO***");
+}
+
+void MainWindow::on_sendLineKd_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETLINEKD;
+    w.i32 = ui->setLineKd->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***KD LÍNEA ACTUALIZADO***");
+}
+
+void MainWindow::on_sendPIDMIN_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETPWMLIMMIN; // 0xA7
+    w.i32 = ui->setPIDMIN->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***PWM MIN ACTUALIZADO***");
+}
+
+void MainWindow::on_sendPIDMAX_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETPWMLIMMAX; // 0xA6
+    w.i32 = ui->setPIDMAX->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***PWM MAX ACTUALIZADO***");
+}
+
+void MainWindow::on_sendSetpoint_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETSETPOINT; // 0xAB
+    w.i32 = ui->setSetpoint->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1]; // Enviamos 2 bytes
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***SETPOINT ACTUALIZADO***");
+}
+
+void MainWindow::on_sendAttackSetpoint_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETSPEED; // 0xB1
+    w.i32 = ui->setAttackSetpoint->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1]; // Enviamos 2 bytes
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***ATTACK SETPOINT ACTUALIZADO***");
+}
+
+void MainWindow::on_sendPWML_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETPWML;
+    w.i32 = ui->setPWML->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***PWM L ACTUALIZADO***");
+}
+
+void MainWindow::on_sendPWMR_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETPWMR;
+    w.i32 = ui->setPWMR->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***PWM R ACTUALIZADO***");
+}
+
+void MainWindow::on_sendOFFSETL_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETOFFSETL;
+    w.i32 = ui->setOFFSETL->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***OFFSET L ACTUALIZADO***");
+}
+
+void MainWindow::on_sendOFFSETR_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETOFFSETR;
+    w.i32 = ui->setOFFSETR->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***OFFSET R ACTUALIZADO***");
+}
+
+void MainWindow::on_sendCustomTurn_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETCUSTOMTURN;
+    w.i32 = ui->setCustomTurn->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***CUSTOM TURN ACTUALIZADO***");
+}
+
+void MainWindow::on_sendCounterAngle_clicked() {
+    uint8_t payload[10];
+    uint8_t index = 0;
+    _udat w;
+    payload[index++] = SETBKANG;
+    w.i32 = ui->setCounterAngle->value();
+    payload[index++] = w.ui8[0];
+    payload[index++] = w.ui8[1];
+    sendCommand(payload, index);
+    ui->textBrowserProcessed->append("***COUNTER ANGLE ACTUALIZADO***");
+}
