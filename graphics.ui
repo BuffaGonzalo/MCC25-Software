@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1040</width>
-    <height>774</height>
+    <height>965</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,13 +41,13 @@
     </rect>
    </property>
   </widget>
-  <widget class="QChartView" name="visorSeguidor" native="true">
+  <widget class="QChartView" name="visorPID" native="true">
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>350</y>
+     <y>360</y>
      <width>991</width>
-     <height>281</height>
+     <height>301</height>
     </rect>
    </property>
   </widget>

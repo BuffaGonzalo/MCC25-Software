@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "internal_data.h"
+#include <QSpinBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -48,7 +49,14 @@ MainWindow::MainWindow(QWidget *parent)
     runtimeTimer.start();
 
     timer1->start(100);
-    timer2->start(200);
+    timer2->start(25);
+
+    // Permitir valores de hasta 10000 (y -10000) en todos los QSpinBox
+    QList<QSpinBox *> spinBoxes = this->findChildren<QSpinBox *>();
+    for (QSpinBox *spinBox : spinBoxes) {
+        spinBox->setMinimum(-10000);
+        spinBox->setMaximum(10000);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -339,6 +347,71 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         ui->ir8_data->setText(str);
 
         break;
+    case GETINTERNALDATA: {
+        if (!paramsSynced) {
+            // 1. PID Balancín (indices 2 a 11)
+            w.ui8[0] = datosRx[2];  w.ui8[1] = datosRx[3];  ui->setBalanceKp->setValue(w.i16[0]);
+            w.ui8[0] = datosRx[4];  w.ui8[1] = datosRx[5];  ui->setBalanceKi->setValue(w.i16[0]);
+            w.ui8[0] = datosRx[6];  w.ui8[1] = datosRx[7];  ui->setBalanceKd->setValue(w.i16[0]);
+            w.ui8[0] = datosRx[8];  w.ui8[1] = datosRx[9];  ui->setPIDMAX->setValue(w.ui16[0]);
+            w.ui8[0] = datosRx[10]; w.ui8[1] = datosRx[11]; ui->setPIDMIN->setValue(w.ui16[0]);
+
+            // 2. Setpoint (indices 12 a 15)
+            w.ui8[0] = datosRx[12]; w.ui8[1] = datosRx[13];
+            w.ui8[2] = datosRx[14]; w.ui8[3] = datosRx[15];
+            ui->setSetpoint->setValue(w.i32);
+
+            // 3. Extra (indices 16 a 29)
+            w.ui8[0] = datosRx[16]; w.ui8[1] = datosRx[17]; ui->setLineKp->setValue(w.i16[0]);
+            w.ui8[0] = datosRx[18]; w.ui8[1] = datosRx[19]; ui->setLineKd->setValue(w.i16[0]);
+            w.ui8[0] = datosRx[20]; w.ui8[1] = datosRx[21]; ui->setOFFSETL->setValue(w.i16[0]);
+            w.ui8[0] = datosRx[22]; w.ui8[1] = datosRx[23]; ui->setOFFSETR->setValue(w.i16[0]);
+            w.ui8[0] = datosRx[24]; w.ui8[1] = datosRx[25]; ui->setCustomTurn->setValue(w.i16[0]);
+            w.ui8[0] = datosRx[26]; w.ui8[1] = datosRx[27]; ui->setAttackSetpoint->setValue(w.i16[0]);
+            w.ui8[0] = datosRx[28]; w.ui8[1] = datosRx[29]; ui->setCounterAngle->setValue(w.i16[0]);
+
+            paramsSynced = true;
+            ui->textBrowserProcessed->append("***PARÁMETROS SINCRONIZADOS DESDE STM32***");
+        }
+        break;
+    }
+    case GETPIDBALANCE: {
+        // 1. Extraer Error (arranca en datosRx[2])
+        w.ui8[0] = datosRx[2]; w.ui8[1] = datosRx[3]; w.ui8[2] = datosRx[4]; w.ui8[3] = datosRx[5];
+        int32_t current_error = w.i32;
+
+        // 2. Extraer Integral
+        w.ui8[0] = datosRx[6]; w.ui8[1] = datosRx[7]; w.ui8[2] = datosRx[8]; w.ui8[3] = datosRx[9];
+        int32_t current_integral = w.i32;
+
+        // 3. Extraer Derivada
+        w.ui8[0] = datosRx[10]; w.ui8[1] = datosRx[11]; w.ui8[2] = datosRx[12]; w.ui8[3] = datosRx[13];
+        int32_t current_derivative = w.i32;
+
+        // 4. Extraer Output
+        w.ui8[0] = datosRx[14]; w.ui8[1] = datosRx[15]; w.ui8[2] = datosRx[16]; w.ui8[3] = datosRx[17];
+        int32_t current_output = w.i32;
+
+        // 5. Leer constantes actuales desde la Interfaz de Qt
+        // (Como paramsSynced se encarga de poblarlas, siempre tendremos el valor real aquí)
+        int16_t kp = ui->setBalanceKp->value();
+        int16_t ki = ui->setBalanceKi->value();
+        int16_t kd = ui->setBalanceKd->value();
+
+        // 6. Calcular los Términos Individuales (Misma matemática que el micro)
+        double term_P = (kp * current_error) / 1000.0;
+        double term_I = (ki * current_integral) / 1000.0;
+        double term_D = (kd * current_derivative) / 1000.0;
+        double term_Out = current_output;
+
+        // 7. Enviar a la gráfica
+        double t = runtimeTimer.elapsed() / 1000.0;
+        myGraphics->updatePID(t, term_P, term_I, term_D, term_Out);
+
+        // Opcional: Imprimir en consola para depurar
+        // qDebug() << "P:" << term_P << "I:" << term_I << "D:" << term_D << "Out:" << term_Out;
+        break;
+    }
     case SETPWML:
     case SETPWMR:
     case SETPWMLIMMAX:
@@ -607,10 +680,19 @@ void MainWindow::OnUdpRxData(){
 
 
 void MainWindow::getData(){
-    static uint8_t wifiMef = 1;
+    static uint8_t internalCounter = 0;
+    static uint8_t commMef = 1;
     uint8_t buf[1];
 
-    switch (wifiMef){
+    internalCounter++;
+    if (internalCounter >= 5) { // 5 * 200ms = 1000ms
+        internalCounter = 0;
+        buf[0] = GETINTERNALDATA;
+        sendSerial(buf, 1);
+        sendUdp(buf, 1);
+    }
+
+    switch (commMef){
     case 1:
         buf[0]=GETMPU;
         break;
@@ -618,18 +700,18 @@ void MainWindow::getData(){
         buf[0]=GETADC;
         break;
     case 3:
-        buf[0]=GETINTERNALDATA;
+        buf[0] = GETPIDBALANCE; // <--- AGREGAMOS LA PETICIÓN AQUÍ
         break;
     }
 
-
-    wifiMef++;
-    if (wifiMef > 3) {
-        wifiMef = 1;
+    commMef++;
+    if (commMef > 3) {
+        commMef = 1;
     }
 
     sendSerial(buf, 1);
     sendUdp(buf, 1);
+
 
     if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()) //colocamos un estadopredeterminado en caso de no estar conectado
         statusMode->setText("CURRENT STATE --> DESCONECTADO");
@@ -682,6 +764,9 @@ void MainWindow::on_pushButton_connectSerial_clicked()
 
         if(QSerialPort1->open(QSerialPort::ReadWrite)){
             ui->pushButton_connectSerial->setText("DISCONNECT");
+            paramsSynced = false;
+            uint8_t b = GETINTERNALDATA;
+            sendSerial(&b, 1);
         }
         else
             QMessageBox::information(this, "Serial PORT", "ERROR. Opening PORT");
@@ -722,6 +807,9 @@ void MainWindow::on_pushButton_connectUdp_clicked()
 
     ui->pushButton_connectUdp->setText("DISCONNECT");
     ui->pushButton_sendUdp->setEnabled(true);
+    paramsSynced = false;
+    uint8_t b = GETINTERNALDATA;
+    sendUdp(&b, 1);
     if(QUdpSocket1->isOpen()){
         if(clientAddress.isNull())
             clientAddress.setAddress(ui->lineEdit_device_ip->text());

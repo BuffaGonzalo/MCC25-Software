@@ -19,6 +19,8 @@ public:
     // Nueva función que recibe todos los datos
     void updateTelemetry(double time, double angle, double setpoint, int lineError, int turnPwm, int sumIR, int state);
 
+    void updatePID(double time, double p, double i, double d, double out);
+
 private:
     Ui::graphics *ui;
 
@@ -35,6 +37,16 @@ private:
     QLineSeries *pwmSeries;
     QValueAxis *axisX_line;
     QValueAxis *axisY_line;
+
+    // Variables para la Gráfica 3 (Términos del PID)
+    QLineSeries *pSeries;
+    QLineSeries *iSeries;
+    QLineSeries *dSeries;
+    QLineSeries *outSeries;
+
+    QChart *chartPID;
+    QValueAxis *axisX_pid;
+    QValueAxis *axisY_pid;
 };
 
 #endif // GRAPHICS_H

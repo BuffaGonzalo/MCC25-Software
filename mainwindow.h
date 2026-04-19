@@ -123,6 +123,7 @@ private:
     bool firRadarExe;
     int contadorAlive=0;
     int angle;
+    bool paramsSynced = false;
 
     uint32_t lftEncData;
     uint32_t rhtEncData;
@@ -167,7 +168,8 @@ private:
         SETLINEKP=0xAC,
         SETLINEKD=0xAD,
 
-        GETINTERNALDATA = 0xF9, // ->revision exaustiva
+        GETINTERNALDATA = 0xF0, // ->revision exaustiva
+        GETPIDBALANCE = 0xF1,
 
         SETOFFSETL=0xAE,
         SETOFFSETR=0xAF,

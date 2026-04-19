@@ -30,28 +30,33 @@ graphics::graphics(QWidget *parent)
     ui->visorBalancin->setChart(chartBalance);
     ui->visorBalancin->setRenderHint(QPainter::Antialiasing);
 
-    // --- GRÁFICA 2: SEGUIDOR DE LÍNEA ---
-    errorSeries = new QLineSeries();
-    errorSeries->setName("Error de Línea");
-    pwmSeries = new QLineSeries();
-    pwmSeries->setName("PWM de Giro");
+    // --- GRÁFICA 3: TÉRMINOS DEL PID DE EQUILIBRIO ---
+    pSeries = new QLineSeries(); pSeries->setName("Proporcional (P)");
+    iSeries = new QLineSeries(); iSeries->setName("Integral (I)");
+    dSeries = new QLineSeries(); dSeries->setName("Derivativo (D)");
+    outSeries = new QLineSeries(); outSeries->setName("Output Total");
 
-    chartLine = new QChart();
-    chartLine->addSeries(errorSeries);
-    chartLine->addSeries(pwmSeries);
-    chartLine->setTitle("Dinámica de Dirección");
-    chartLine->layout()->setContentsMargins(0,0,0,0);
+    chartPID = new QChart();
+    chartPID->addSeries(pSeries);
+    chartPID->addSeries(iSeries);
+    chartPID->addSeries(dSeries);
+    chartPID->addSeries(outSeries);
+    chartPID->setTitle("Aportes del PID (Balancín)");
+    chartPID->layout()->setContentsMargins(0,0,0,0);
 
-    axisX_line = new QValueAxis(); axisX_line->setRange(0, 10);
-    axisY_line = new QValueAxis(); axisY_line->setRange(-100, 100);
+    axisX_pid = new QValueAxis(); axisX_pid->setRange(0, 10);
+    axisY_pid = new QValueAxis(); axisY_pid->setRange(-1500, 1500); // Rango de PWM, ajustalo si necesitas
 
-    chartLine->addAxis(axisX_line, Qt::AlignBottom);
-    chartLine->addAxis(axisY_line, Qt::AlignLeft);
-    errorSeries->attachAxis(axisX_line); errorSeries->attachAxis(axisY_line);
-    pwmSeries->attachAxis(axisX_line); pwmSeries->attachAxis(axisY_line);
+    chartPID->addAxis(axisX_pid, Qt::AlignBottom);
+    chartPID->addAxis(axisY_pid, Qt::AlignLeft);
 
-    ui->visorSeguidor->setChart(chartLine);
-    ui->visorSeguidor->setRenderHint(QPainter::Antialiasing);
+    pSeries->attachAxis(axisX_pid); pSeries->attachAxis(axisY_pid);
+    iSeries->attachAxis(axisX_pid); iSeries->attachAxis(axisY_pid);
+    dSeries->attachAxis(axisX_pid); dSeries->attachAxis(axisY_pid);
+    outSeries->attachAxis(axisX_pid); outSeries->attachAxis(axisY_pid);
+
+    ui->visorPID->setChart(chartPID);
+    ui->visorPID->setRenderHint(QPainter::Antialiasing);
 }
 
 graphics::~graphics()
@@ -71,5 +76,18 @@ void graphics::updateTelemetry(double time, double angle, double setpoint, int l
     if (time > 10.0) {
         axisX_bal->setRange(time - 10.0, time);
         axisX_line->setRange(time - 10.0, time);
+    }
+}
+
+void graphics::updatePID(double time, double p, double i, double d, double out)
+{
+    pSeries->append(time, p);
+    iSeries->append(time, i);
+    dSeries->append(time, d);
+    outSeries->append(time, out);
+
+    // Scroll del eje X para que avance con el tiempo
+    if (time > 10.0) {
+        axisX_pid->setRange(time - 10.0, time);
     }
 }
