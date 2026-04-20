@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     runtimeTimer.start();
 
     timer1->start(100);
-    timer2->start(25);
+    timer2->start(50);
 
     // Permitir valores de hasta 10000 (y -10000) en todos los QSpinBox
     QList<QSpinBox *> spinBoxes = this->findChildren<QSpinBox *>();
@@ -678,48 +678,39 @@ void MainWindow::OnUdpRxData(){
 
 }
 
-
 void MainWindow::getData(){
-    static uint8_t internalCounter = 0;
+    // --- 1. GUARDIA DE SEGURIDAD (Frena el spam) ---
+    if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()) {
+        statusMode->setText("CURRENT STATE --> DESCONECTADO");
+        return;
+    }
+
+    // --- 2. ACTUALIZAR ESTADO VISUAL ---
+    if(QSerialPort1->isOpen())
+        statusMode->setText("CURRENT STATE --> CONECTADO SERIE");
+    else if (QUdpSocket1->isOpen())
+        statusMode->setText("CURRENT STATE --> CONECTADO UDP");
+
+
+    // --- 3. MÁQUINA DE ESTADOS (Solo llega aquí si hay conexión) ---
     static uint8_t commMef = 1;
     uint8_t buf[1];
 
-    internalCounter++;
-    if (internalCounter >= 5) { // 5 * 200ms = 1000ms
-        internalCounter = 0;
-        buf[0] = GETINTERNALDATA;
-        sendSerial(buf, 1);
-        sendUdp(buf, 1);
-    }
-
     switch (commMef){
-    case 1:
-        buf[0]=GETMPU;
-        break;
-    case 2:
-        buf[0]=GETADC;
-        break;
-    case 3:
-        buf[0] = GETPIDBALANCE; // <--- AGREGAMOS LA PETICIÓN AQUÍ
-        break;
+    case 1: buf[0] = GETMPU; break;
+    case 2: buf[0] = GETADC; break;
+    case 3: buf[0] = GETMPU; break;
+    case 4: buf[0] = GETADC; break;
+    case 5: buf[0] = GETINTERNALDATA; break;
     }
 
     commMef++;
-    if (commMef > 3) {
+    if (commMef > 5) {
         commMef = 1;
     }
 
-    sendSerial(buf, 1);
-    sendUdp(buf, 1);
-
-
-    if(!QSerialPort1->isOpen() && !QUdpSocket1->isOpen()) //colocamos un estadopredeterminado en caso de no estar conectado
-        statusMode->setText("CURRENT STATE --> DESCONECTADO");
-    else
-        if(QSerialPort1->isOpen())
-            statusMode->setText("CURRENT STATE --> CONNECTADO SERIE");
-        else if (QUdpSocket1->isOpen())
-            statusMode->setText("CURRENT STATE --> CONNECTADO UDP");
+    // Enviar el comando
+    sendCommand(buf, 1);
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event){ //utilizado para mostrar los puestos disponibles
