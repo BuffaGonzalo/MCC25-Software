@@ -86,7 +86,32 @@ void graphics::updatePID(double time, double p, double i, double d, double out)
     dSeries->append(time, d);
     outSeries->append(time, out);
 
-    // Scroll del eje X para que avance con el tiempo
+    // --- LÓGICA DE ESCALA ADAPTATIVA ---
+    // Encontramos el valor más alto y bajo de los datos que acaban de llegar
+    double values[] = {p, i, d, out};
+    bool changed = false;
+
+    for(double val : values) {
+        if (val > currentYMax) {
+            currentYMax = val;
+            changed = true;
+        }
+        if (val < currentYMin) {
+            currentYMin = val;
+            changed = true;
+        }
+    }
+
+    // Si hubo un cambio, actualizamos el rango con un margen del 10%
+    if (changed) {
+        double margin = (currentYMax - currentYMin) * 0.1;
+        // Evitamos que el margen sea 0 si los valores son constantes
+        if (margin < 1.0) margin = 5.0;
+
+        axisY_pid->setRange(currentYMin - margin, currentYMax + margin);
+    }
+
+    // Scroll del eje X (se mantiene igual)
     if (time > 10.0) {
         axisX_pid->setRange(time - 10.0, time);
     }

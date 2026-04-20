@@ -165,7 +165,7 @@
       <height>33</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_8">
+    <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="2,0,1">
      <item>
       <widget class="QComboBox" name="comboBox_PORT">
        <property name="placeholderText">
@@ -174,18 +174,24 @@
       </widget>
      </item>
      <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QPushButton" name="pushButton_connectSerial">
          <property name="text">
           <string>CONNECT</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_sendSerial">
-         <property name="text">
-          <string>SEND SERIAL</string>
          </property>
         </widget>
        </item>
@@ -204,7 +210,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="2,0,1">
        <item>
         <widget class="QLineEdit" name="lineEdit_local_port">
          <property name="text">
@@ -227,13 +233,6 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QPushButton" name="pushButton_sendUdp">
-           <property name="text">
-            <string>SEND UDP</string>
-           </property>
-          </widget>
-         </item>
          <item>
           <widget class="QPushButton" name="pushButton_connectUdp">
            <property name="text">
@@ -410,7 +409,7 @@
       <x>530</x>
       <y>40</y>
       <width>321</width>
-      <height>361</height>
+      <height>485</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -1160,7 +1159,7 @@
         </font>
        </property>
        <property name="text">
-        <string>KD</string>
+        <string>KI</string>
        </property>
       </widget>
      </item>

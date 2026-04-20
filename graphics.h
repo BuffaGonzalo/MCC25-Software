@@ -47,6 +47,9 @@ private:
     QChart *chartPID;
     QValueAxis *axisX_pid;
     QValueAxis *axisY_pid;
+
+    double currentYMin = -10.0; // Valor inicial razonable
+    double currentYMax = 10.0;
 };
 
 #endif // GRAPHICS_H

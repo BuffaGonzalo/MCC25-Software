@@ -44,8 +44,6 @@ private slots:
 
     void on_pushButton_connectSerial_clicked();
 
-    void on_pushButton_sendSerial_clicked();
-
     void on_pushButton_connectUdp_clicked();
 
     void getData();
@@ -76,7 +74,6 @@ private slots:
 
     bool eventFilter(QObject *watched, QEvent *event);
 
-    void on_pushButton_clicked();
 
     void on_sendBalanceKp_clicked();
     void on_sendBalanceKi_clicked();

@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     runtimeTimer.start();
 
     timer1->start(100);
-    timer2->start(50);
+    timer2->start(25);
 
     // Permitir valores de hasta 10000 (y -10000) en todos los QSpinBox
     QList<QSpinBox *> spinBoxes = this->findChildren<QSpinBox *>();
@@ -701,11 +701,12 @@ void MainWindow::getData(){
     case 2: buf[0] = GETADC; break;
     case 3: buf[0] = GETMPU; break;
     case 4: buf[0] = GETADC; break;
-    case 5: buf[0] = GETINTERNALDATA; break;
+    case 5: buf[0] = GETPIDBALANCE; break;   // <--- PEDIMOS EL PID AQUÍ
+    case 6: buf[0] = GETINTERNALDATA; break; // Movemos internal data al caso 6
     }
 
     commMef++;
-    if (commMef > 5) {
+    if (commMef > 6) { // <--- AUMENTAR EL LÍMITE A 6
         commMef = 1;
     }
 
@@ -737,11 +738,9 @@ void MainWindow::on_pushButton_connectSerial_clicked()
 {
     if(QSerialPort1->isOpen()){
         QSerialPort1->close();
-        ui->pushButton_sendSerial->setEnabled(false);
         ui->pushButton_connectSerial->setText("CONNECT");
     }
     else{
-        ui->pushButton_sendSerial->setEnabled(true);
 
         if(ui->comboBox_PORT->currentText() == "")
             return;
@@ -764,11 +763,6 @@ void MainWindow::on_pushButton_connectSerial_clicked()
     }
 }
 
-void MainWindow::on_pushButton_sendSerial_clicked()
-{
-
-}
-
 void MainWindow::on_pushButton_connectUdp_clicked()
 {
     int Port;
@@ -776,7 +770,6 @@ void MainWindow::on_pushButton_connectUdp_clicked()
 
     if(QUdpSocket1->isOpen()){
         QUdpSocket1->close();
-        ui->pushButton_sendUdp->setEnabled(false);
         ui->pushButton_connectUdp->setText("CONNECT");
         return;
     }
@@ -797,7 +790,6 @@ void MainWindow::on_pushButton_connectUdp_clicked()
     }
 
     ui->pushButton_connectUdp->setText("DISCONNECT");
-    ui->pushButton_sendUdp->setEnabled(true);
     paramsSynced = false;
     uint8_t b = GETINTERNALDATA;
     sendUdp(&b, 1);
@@ -808,10 +800,6 @@ void MainWindow::on_pushButton_connectUdp_clicked()
             puertoremoto=ui->lineEdit_device_port->text().toInt();
         QUdpSocket1->writeDatagram("r", 1, clientAddress, puertoremoto);
     }
-}
-
-void MainWindow::on_pushButton_clicked()
-{
 }
 
 void MainWindow::on_sendBalanceKp_clicked() {
