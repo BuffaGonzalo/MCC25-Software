@@ -93,6 +93,18 @@ private slots:
     void on_sendCustomTurn_clicked();
     void on_sendCounterAngle_clicked();
 
+    void on_P1toP3_clicked();
+
+    void on_P1toP2_clicked();
+
+    void on_P2toP1_clicked();
+
+    void on_P3toP1_clicked();
+
+    void on_P3toP2_clicked();
+
+    void on_P2toP3_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *QSerialPort1;

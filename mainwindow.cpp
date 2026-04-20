@@ -214,7 +214,8 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Ax: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ax_data->setText(str);
+        ui->ax_data->display(str);
+          ///  setText(str);
 
         w.i8[0] = datosRx[4];
         w.i8[1] = datosRx[5];
@@ -223,7 +224,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Ay: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ay_data->setText(str);
+        ui->ay_data->display(str);
 
         w.i8[0] = datosRx[6];
         w.i8[1] = datosRx[7];
@@ -232,7 +233,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Az: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->az_data->setText(str);
+        ui->az_data->display(str);
 
         //Datos giroscopio
         w.i8[0] = datosRx[8];
@@ -241,7 +242,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Gx: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->gx_data->setText(str);
+        ui->gx_data->display(str);
 
         w.i8[0] = datosRx[10];
         w.i8[1] = datosRx[11];
@@ -249,7 +250,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Gy: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->gy_data->setText(str);
+        ui->gy_data->display(str);
 
         w.i8[0] = datosRx[12];
         w.i8[1] = datosRx[13];
@@ -258,7 +259,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Gz: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->gz_data->setText(str);
+        ui->gz_data->display(str);
 
         // 2. Calcular ángulos
         float roll = atan2(ay, sqrt(ax * ax + az * az)) * 180.0 / M_PI;
@@ -295,56 +296,56 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR1: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ir1_data->setText(str);
+        ui->ir1_data->display(str);
 
         w.ui8[0] = datosRx[4];
         w.ui8[1] = datosRx[5];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR2: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ir2_data->setText(str);
+        ui->ir2_data->display(str);
 
         w.ui8[0] = datosRx[6];
         w.ui8[1] = datosRx[7];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR3: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ir3_data->setText(str);
+        ui->ir3_data->display(str);
 
         w.ui8[0] = datosRx[8];
         w.ui8[1] = datosRx[9];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR4: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ir4_data->setText(str);
+        ui->ir4_data->display(str);
 
         w.ui8[0] = datosRx[10];
         w.ui8[1] = datosRx[11];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR5: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ir5_data->setText(str);
+        ui->ir5_data->display(str);
 
         w.ui8[0] = datosRx[12];
         w.ui8[1] = datosRx[13];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR6: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ir6_data->setText(str);
+        ui->ir6_data->display(str);
 
         w.ui8[0] = datosRx[14];
         w.ui8[1] = datosRx[15];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR7: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ir7_data->setText(str);
+        ui->ir7_data->display(str);
 
         w.ui8[0] = datosRx[16];
         w.ui8[1] = datosRx[17];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR8: " + str;
         ui->textBrowserProcessed->append(strOut);
-        ui->ir8_data->setText(str);
+        ui->ir8_data->display(str);
 
         break;
     case GETINTERNALDATA: {
@@ -981,3 +982,41 @@ void MainWindow::on_sendCounterAngle_clicked() {
     sendCommand(payload, index);
     ui->textBrowserProcessed->append("***COUNTER ANGLE ACTUALIZADO***");
 }
+
+
+void MainWindow::on_P1toP3_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+
+void MainWindow::on_P1toP2_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+
+
+void MainWindow::on_P2toP1_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+
+void MainWindow::on_P3toP1_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+
+void MainWindow::on_P3toP2_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+
+void MainWindow::on_P2toP3_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+}
+

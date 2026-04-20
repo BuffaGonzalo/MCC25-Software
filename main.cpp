@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 
     QApplication a(argc, argv);
-    a.setStyle("fusion"); //linea para colocar el color de la ventana segun el tema de windows
+    //a.setStyle("fusion"); //linea para colocar el color de la ventana segun el tema de windows
     MainWindow w;
     w.show();
     return a.exec();
