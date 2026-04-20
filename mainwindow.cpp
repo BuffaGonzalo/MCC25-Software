@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    initPIDChart();
     timer1 = new QTimer(this);
     timer2 = new QTimer(this);
 
@@ -405,9 +406,9 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         double term_D = (kd * current_derivative) / 1000.0;
         double term_Out = current_output;
 
-        // 7. Enviar a la gráfica
+        // 7. Enviar a la gráfica embebida en MainWindow
         double t = runtimeTimer.elapsed() / 1000.0;
-        myGraphics->updatePID(t, term_P, term_I, term_D, term_Out);
+        updatePIDChart(t, term_P, term_I, term_D, term_Out);
 
         // Opcional: Imprimir en consola para depurar
         // qDebug() << "P:" << term_P << "I:" << term_I << "D:" << term_D << "Out:" << term_Out;
@@ -1020,3 +1021,66 @@ void MainWindow::on_P2toP3_clicked()
     ui->stackedWidget->setCurrentIndex(2);
 }
 
+// -----------------------------------------------------------------------
+// Chart PID embebido en MainWindow (widget PIDchart promovido a QChartView)
+// -----------------------------------------------------------------------
+void MainWindow::initPIDChart()
+{
+    pid_pSeries   = new QLineSeries(); pid_pSeries->setName("Proporcional (P)");
+    pid_iSeries   = new QLineSeries(); pid_iSeries->setName("Integral (I)");
+    pid_dSeries   = new QLineSeries(); pid_dSeries->setName("Derivativo (D)");
+    pid_outSeries = new QLineSeries(); pid_outSeries->setName("Output Total");
+
+    chartPID_mw = new QChart();
+    chartPID_mw->addSeries(pid_pSeries);
+    chartPID_mw->addSeries(pid_iSeries);
+    chartPID_mw->addSeries(pid_dSeries);
+    chartPID_mw->addSeries(pid_outSeries);
+    chartPID_mw->setTitle("Aportes del PID (Balancín)");
+    chartPID_mw->layout()->setContentsMargins(0, 0, 0, 0);
+    chartPID_mw->setBackgroundRoundness(0);
+
+    pid_axisX = new QValueAxis();
+    pid_axisX->setRange(0, 10);
+    pid_axisX->setTitleText("Tiempo (s)");
+
+    pid_axisY = new QValueAxis();
+    pid_axisY->setRange(pid_yMin, pid_yMax);
+    pid_axisY->setTitleText("Valor");
+
+    chartPID_mw->addAxis(pid_axisX, Qt::AlignBottom);
+    chartPID_mw->addAxis(pid_axisY, Qt::AlignLeft);
+
+    pid_pSeries->attachAxis(pid_axisX);   pid_pSeries->attachAxis(pid_axisY);
+    pid_iSeries->attachAxis(pid_axisX);   pid_iSeries->attachAxis(pid_axisY);
+    pid_dSeries->attachAxis(pid_axisX);   pid_dSeries->attachAxis(pid_axisY);
+    pid_outSeries->attachAxis(pid_axisX); pid_outSeries->attachAxis(pid_axisY);
+
+    ui->PIDchart->setChart(chartPID_mw);
+    ui->PIDchart->setRenderHint(QPainter::Antialiasing);
+}
+
+void MainWindow::updatePIDChart(double time, double p, double i, double d, double out)
+{
+    pid_pSeries->append(time, p);
+    pid_iSeries->append(time, i);
+    pid_dSeries->append(time, d);
+    pid_outSeries->append(time, out);
+
+    // Escala adaptativa del eje Y
+    double values[] = {p, i, d, out};
+    bool changed = false;
+    for (double val : values) {
+        if (val > pid_yMax) { pid_yMax = val; changed = true; }
+        if (val < pid_yMin) { pid_yMin = val; changed = true; }
+    }
+    if (changed) {
+        double margin = (pid_yMax - pid_yMin) * 0.1;
+        if (margin < 1.0) margin = 5.0;
+        pid_axisY->setRange(pid_yMin - margin, pid_yMax + margin);
+    }
+
+    // Scroll del eje X (ventana de 10 segundos)
+    if (time > 10.0)
+        pid_axisX->setRange(time - 10.0, time);
+}

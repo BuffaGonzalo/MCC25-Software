@@ -18,6 +18,11 @@
 
 #include <QElapsedTimer>
 
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QChart>
+#include <QtCharts/QValueAxis>
+
 #include "graphics.h"
 
 QT_BEGIN_NAMESPACE
@@ -118,6 +123,20 @@ private:
 
 
     graphics *myGraphics;
+
+    // --- Gráfica PID embebida en MainWindow ---
+    QChart       *chartPID_mw;
+    QLineSeries  *pid_pSeries;
+    QLineSeries  *pid_iSeries;
+    QLineSeries  *pid_dSeries;
+    QLineSeries  *pid_outSeries;
+    QValueAxis   *pid_axisX;
+    QValueAxis   *pid_axisY;
+    double        pid_yMin = -10.0;
+    double        pid_yMax =  10.0;
+
+    void initPIDChart();
+    void updatePIDChart(double time, double p, double i, double d, double out);
 
     //variables comunicacion udp
     QUdpSocket *QUdpSocket1;
