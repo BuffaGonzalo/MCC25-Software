@@ -3,6 +3,9 @@
 #include "internal_data.h"
 #include <QSpinBox>
 
+static bool isWaitingReply = false;
+static int timeoutPatience = 0;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -50,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     runtimeTimer.start();
 
     timer1->start(100);
-    timer2->start(25);
+    timer2->start(35);
 
     // Permitir valores de hasta 10000 (y -10000) en todos los QSpinBox
     QList<QSpinBox *> spinBoxes = this->findChildren<QSpinBox *>();
@@ -167,10 +170,20 @@ void MainWindow::dataReceived(){
 }
 
 void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
-    int32_t length = sizeof(*datosRx)/sizeof(datosRx[0]);
-    static int16_t contadorAlive=0;
+    //int32_t length = sizeof(*datosRx)/sizeof(datosRx[0]);
+    int32_t length = datosRx[0];
+    uint8_t id = datosRx[1];
     QString str, strOut;
     _udat w;
+
+    // --- SEMÁFORO PING-PONG ---
+    // Solo liberamos el semáforo si la respuesta pertenece a un comando solicitado (MPU, ADC, etc).
+    // El heartbeat ALIVE es autónomo del STM32, NO debe liberar el semáforo
+    // porque no fue una respuesta a algo que nosotros pedimos.
+    if (id != GETALIVE) {
+        isWaitingReply = false;
+    }
+
     for(int i = 1; i<length; i++){
         if(isalnum(datosRx[i]))
             str = str + QString("%1").arg(char(datosRx[i]));
@@ -535,8 +548,8 @@ void MainWindow::sendUdp(uint8_t *buf, uint8_t length){
     if(puertoremoto==0)
         puertoremoto=puerto;
     if(QUdpSocket1->isOpen()){
-        QUdpSocket1->writeDatagram(reinterpret_cast<const char *>(tx), (tx[4]+7), clientAddress, puertoremoto);
-
+        //QUdpSocket1->writeDatagram(reinterpret_cast<const char *>(tx), (tx[4]+7), clientAddress, puertoremoto);
+        QUdpSocket1->writeDatagram(reinterpret_cast<const char *>(tx), (tx[4]+6), clientAddress, puertoremoto);
     }
 
     for(int i=0; i<=indice; i++){
@@ -581,103 +594,118 @@ void MainWindow::timeOut(){
 }
 
 void MainWindow::OnUdpRxData(){
-    qint64          count=0;
+    qint64          count = 0;
     unsigned char   *incomingBuffer = NULL;
 
+    // EL BUCLE PROCESA CADA DATAGRAMA PENDIENTE EN LA COLA
     while(QUdpSocket1->hasPendingDatagrams()){
         count = QUdpSocket1->pendingDatagramSize();
+        if (count <= 0) continue;
+
         incomingBuffer = new unsigned char[count];
-        QUdpSocket1->readDatagram( reinterpret_cast<char *>(incomingBuffer), count, &RemoteAddress, &RemotePort);
-    }
-    if (count<=0)
-        return;
+        QUdpSocket1->readDatagram(reinterpret_cast<char *>(incomingBuffer), count, &RemoteAddress, &RemotePort);
 
-    QString str="";
-    for(int i=0; i<count; i++){
-        if(isalnum(incomingBuffer[i]))
-            str = str + QString("%1").arg(char(incomingBuffer[i]));
-        else
-            str = str +"{" + QString("%1").arg(incomingBuffer[i],2,16,QChar('0')) + "}";
-    }
-    ui->textBrowserUnProcessed->append("MBED-->UDP-->PC (" + str + ")");
-    QString adress=RemoteAddress.toString();
-    ui->textBrowserUnProcessed->append(" adr " + adress);
-
-    ui->lineEdit_device_ip->setText(RemoteAddress.toString().right((RemoteAddress.toString().length())-7));
-    ui->lineEdit_device_port->setText(QString().number(RemotePort,10));
-
-    for(int i=0;i<count; i++){
-        switch (estadoProtocoloUdp) {
-        case START:
-            if (incomingBuffer[i]=='U'){
-                estadoProtocoloUdp=HEADER_1;
-                rxDataUdp.cheksum=0;
-            }
-            break;
-        case HEADER_1:
-            if (incomingBuffer[i]=='N')
-                estadoProtocoloUdp=HEADER_2;
-            else{
-                i--;
-                estadoProtocoloUdp=START;
-            }
-            break;
-        case HEADER_2:
-            if (incomingBuffer[i]=='E')
-                estadoProtocoloUdp=HEADER_3;
-            else{
-                i--;
-                estadoProtocoloUdp=START;
-            }
-            break;
-        case HEADER_3:
-            if (incomingBuffer[i]=='R')
-                estadoProtocoloUdp=NBYTES;
-            else{
-                i--;
-                estadoProtocoloUdp=START;
-            }
-            break;
-        case NBYTES:
-            rxDataUdp.nBytes=incomingBuffer[i];
-            estadoProtocoloUdp=TOKEN;
-            break;
-        case TOKEN:
-            if (incomingBuffer[i]==':'){
-                estadoProtocoloUdp=PAYLOAD;
-                rxDataUdp.cheksum='U'^'N'^'E'^'R'^ rxDataUdp.nBytes^':';
-                rxDataUdp.payLoad[0]=rxDataUdp.nBytes;
-                rxDataUdp.index=1;
-            }
-            else{
-                i--;
-                estadoProtocoloUdp=START;
-            }
-            break;
-        case PAYLOAD:
-            if (rxDataUdp.nBytes>1){
-                rxDataUdp.payLoad[rxDataUdp.index++]=incomingBuffer[i];
-                rxDataUdp.cheksum^=incomingBuffer[i];
-            }
-            rxDataUdp.nBytes--;
-            if(rxDataUdp.nBytes==0){
-                estadoProtocoloUdp=START;
-
-                if(rxDataUdp.cheksum==incomingBuffer[i]){
-                    decodeData(&rxDataUdp.payLoad[0],UDP);
-                }else{
-                    ui->textBrowserProcessed->append(" CHK DISTINTO!!!!! ");
-                }
-            }
-            break;
-
-        default:
-            estadoProtocoloUdp=START;
-            break;
+        // Debug visual de los datos crudos en la interfaz
+        QString str = "";
+        for(int i = 0; i < count; i++){
+            if(isalnum(incomingBuffer[i]))
+                str = str + QString("%1").arg(char(incomingBuffer[i]));
+            else
+                str = str + "{" + QString("%1").arg(incomingBuffer[i], 2, 16, QChar('0')) + "}";
         }
-    }
-    delete [] incomingBuffer;
+        ui->textBrowserUnProcessed->append("MBED-->UDP-->PC (" + str + ")");
+        ui->textBrowserUnProcessed->append(" adr " + RemoteAddress.toString());
 
+        // Actualizar la IP y el puerto detectado del robot
+        ui->lineEdit_device_ip->setText(RemoteAddress.toString().right((RemoteAddress.toString().length())-7));
+        ui->lineEdit_device_port->setText(QString().number(RemotePort, 10));
+
+        // --- RESET de la MeF al inicio de cada datagrama ---
+        // Cada AT+CIPSEND del ESP01 genera exactamente un datagrama UDP completo.
+        // Empezar en START por cada datagrama evita que un paquete corrupto
+        // arrastre estado residual al siguiente datagrama válido.
+        estadoProtocoloUdp = START;
+
+        // MÁQUINA DE ESTADOS DEL PROTOCOLO UNER
+        for(int i = 0; i < count; i++){
+            switch (estadoProtocoloUdp) {
+            case START:
+                if (incomingBuffer[i] == 'U'){
+                    estadoProtocoloUdp = HEADER_1;
+                    rxDataUdp.cheksum = 0;
+                }
+                break;
+            case HEADER_1:
+                if (incomingBuffer[i] == 'N')
+                    estadoProtocoloUdp = HEADER_2;
+                else {
+                    i--;
+                    estadoProtocoloUdp = START;
+                }
+                break;
+            case HEADER_2:
+                if (incomingBuffer[i] == 'E')
+                    estadoProtocoloUdp = HEADER_3;
+                else {
+                    i--;
+                    estadoProtocoloUdp = START;
+                }
+                break;
+            case HEADER_3:
+                if (incomingBuffer[i] == 'R')
+                    estadoProtocoloUdp = NBYTES;
+                else {
+                    i--;
+                    estadoProtocoloUdp = START;
+                }
+                break;
+            case NBYTES:
+                rxDataUdp.nBytes = incomingBuffer[i];
+                estadoProtocoloUdp = TOKEN;
+                break;
+            case TOKEN:
+                if (incomingBuffer[i] == ':'){
+                    estadoProtocoloUdp = PAYLOAD;
+                    rxDataUdp.cheksum = 'U' ^ 'N' ^ 'E' ^ 'R' ^ rxDataUdp.nBytes ^ ':';
+                    rxDataUdp.payLoad[0] = rxDataUdp.nBytes;
+                    rxDataUdp.index = 1;
+                }
+                else {
+                    i--;
+                    estadoProtocoloUdp = START;
+                }
+                break;
+            case PAYLOAD:
+                if (rxDataUdp.nBytes > 1){
+                    rxDataUdp.payLoad[rxDataUdp.index++] = incomingBuffer[i];
+                    rxDataUdp.cheksum ^= incomingBuffer[i];
+                }
+                rxDataUdp.nBytes--;
+                if(rxDataUdp.nBytes == 0){
+                    estadoProtocoloUdp = START;
+
+                    // Verificación de Checksum
+                    if(rxDataUdp.cheksum == incomingBuffer[i]){
+                        decodeData(&rxDataUdp.payLoad[0], UDP);
+                    } else {
+                        ui->textBrowserProcessed->append(" CHK DISTINTO!!!!! ");
+                        // --- LIBERAR SEMÁFORO en error de CHK ---
+                        // Sin esto, getData() queda bloqueado ~600ms esperando
+                        // el timeoutPatience, paralizando toda la telemetría.
+                        isWaitingReply = false;
+                    }
+                }
+                break;
+
+            default:
+                estadoProtocoloUdp = START;
+                break;
+            }
+        }
+
+        // IMPORTANTE: Liberar la memoria del buffer actual antes de leer el siguiente paquete
+        delete [] incomingBuffer;
+    }
 }
 
 void MainWindow::getData(){
@@ -687,14 +715,29 @@ void MainWindow::getData(){
         return;
     }
 
+    // --- SISTEMA DE ADAPTACIÓN A REDES LENTAS (PING-PONG) ---
+    if (isWaitingReply) {
+        timeoutPatience++;
+        // Si pasaron ~240ms (8 ciclos de 30ms) sin respuesta,
+        // asumimos que el paquete se perdió y forzamos un reintento.
+        if (timeoutPatience >= 8) {
+            isWaitingReply = false;
+        } else {
+            return; // Seguimos esperando. ¡NO enviamos nada a la ESP-01!
+        }
+    }
+
+    // Levantamos el semáforo: acabamos de preguntar, ahora esperamos.
+    isWaitingReply = true;
+    timeoutPatience = 0;
+
     // --- 2. ACTUALIZAR ESTADO VISUAL ---
     if(QSerialPort1->isOpen())
         statusMode->setText("CURRENT STATE --> CONECTADO SERIE");
     else if (QUdpSocket1->isOpen())
         statusMode->setText("CURRENT STATE --> CONECTADO UDP");
 
-
-    // --- 3. MÁQUINA DE ESTADOS (Solo llega aquí si hay conexión) ---
+    // --- 3. MÁQUINA DE ESTADOS ---
     static uint8_t commMef = 1;
     uint8_t buf[1];
 
@@ -703,19 +746,17 @@ void MainWindow::getData(){
     case 2: buf[0] = GETADC; break;
     case 3: buf[0] = GETMPU; break;
     case 4: buf[0] = GETADC; break;
-    case 5: buf[0] = GETPIDBALANCE; break;   // <--- PEDIMOS EL PID AQUÍ
-    case 6: buf[0] = GETINTERNALDATA; break; // Movemos internal data al caso 6
+    case 5: buf[0] = GETPIDBALANCE; break;
+    case 6: buf[0] = GETINTERNALDATA; break;
     }
 
     commMef++;
-    if (commMef > 6) { // <--- AUMENTAR EL LÍMITE A 6
+    if (commMef > 6) {
         commMef = 1;
     }
 
-    // Enviar el comando
     sendCommand(buf, 1);
 }
-
 bool MainWindow::eventFilter(QObject *watched, QEvent *event){ //utilizado para mostrar los puestos disponibles
     if(watched == ui->comboBox_PORT) {
         if (event->type() == QEvent::MouseButtonPress) {
