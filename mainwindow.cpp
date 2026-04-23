@@ -11,6 +11,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Limitar los logs a los últimos 50 comandos
+    ui->textBrowserProcessed->document()->setMaximumBlockCount(50);
+    ui->textBrowserUnProcessed->document()->setMaximumBlockCount(50);
+
     initPIDChart();
     timer1 = new QTimer(this);
     timer2 = new QTimer(this);
@@ -303,7 +308,8 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         }
         break;
     }
-    case GETADC:
+    case GETADC: {
+        int16_t sumLineSensors = 0;
         //Datos acelerometro
         w.ui8[0] = datosRx[2];
         w.ui8[1] = datosRx[3];
@@ -318,6 +324,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         strOut = "IR2: " + str;
         ui->textBrowserProcessed->append(strOut);
         ui->ir2_data->display(str);
+        sumLineSensors += qMax(0, 2400 - w.i16[0]);
 
         w.ui8[0] = datosRx[6];
         w.ui8[1] = datosRx[7];
@@ -332,6 +339,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         strOut = "IR4: " + str;
         ui->textBrowserProcessed->append(strOut);
         ui->ir4_data->display(str);
+        sumLineSensors += qMax(0, 2400 - w.i16[0]);
 
         w.ui8[0] = datosRx[10];
         w.ui8[1] = datosRx[11];
@@ -346,6 +354,9 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         strOut = "IR6: " + str;
         ui->textBrowserProcessed->append(strOut);
         ui->ir6_data->display(str);
+        sumLineSensors += qMax(0, 2400 - w.i16[0]);
+        str = QString("%1").arg(sumLineSensors, 5, 10, QChar('0'));
+        ui->sumSensors_data->display(str);
 
         w.ui8[0] = datosRx[14];
         w.ui8[1] = datosRx[15];
@@ -362,6 +373,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         ui->ir8_data->display(str);
 
         break;
+    }
     case GETINTERNALDATA: {
         if (!paramsSynced) {
             // 1. PID Balancín (indices 2 a 11)
