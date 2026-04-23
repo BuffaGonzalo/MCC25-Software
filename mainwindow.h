@@ -110,7 +110,25 @@ private slots:
 
     void on_P2toP3_clicked();
 
+    void on_pushButton_exportExcel_clicked();
+    void on_pushButton_exportTxt_clicked();
+
 private:
+    struct LogEntry {
+        QDateTime time;
+        QString data;
+        QString type; // "RX", "TX", "UNKNOWN", "CHK_ERROR"
+    };
+    QList<LogEntry> m_logHistory;
+
+    // Estadísticas
+    int m_countSent = 0;
+    int m_countReceived = 0;
+    int m_countUnknown = 0;
+    int m_countChecksumErrors = 0;
+
+    void addLogEntry(const QString &data, const QString &type);
+    void cleanOldLogs();
     Ui::MainWindow *ui;
     QSerialPort *QSerialPort1;
     QLabel *statusMode;

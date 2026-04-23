@@ -2,6 +2,10 @@
 #include "ui_mainwindow.h"
 #include "internal_data.h"
 #include <QSpinBox>
+#include <QFile>
+#include <QTextStream>
+#include <QFileDialog>
+#include <QDateTime>
 
 static bool isWaitingReply = false;
 static int timeoutPatience = 0;
@@ -73,6 +77,106 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::addLogEntry(const QString &data, const QString &type) {
+    LogEntry entry;
+    entry.time = QDateTime::currentDateTime();
+    entry.data = data;
+    entry.type = type;
+    m_logHistory.append(entry);
+
+    if (type == "UNKNOWN") m_countUnknown++;
+    else if (type == "CHK_ERROR") m_countChecksumErrors++;
+
+    cleanOldLogs();
+}
+
+void MainWindow::cleanOldLogs() {
+    QDateTime fiveMinutesAgo = QDateTime::currentDateTime().addSecs(-300);
+    while (!m_logHistory.isEmpty() && m_logHistory.first().time < fiveMinutesAgo) {
+        m_logHistory.removeFirst();
+    }
+}
+
+void MainWindow::on_pushButton_exportExcel_clicked() {
+    QString fileName = QFileDialog::getSaveFileName(this, "Exportar Historial (Excel/CSV)", 
+                                                    "log_robot_" + QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss") + ".csv", 
+                                                    "Archivos CSV (*.csv)");
+    if (fileName.isEmpty()) return;
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Error", "No se pudo crear el archivo.");
+        return;
+    }
+
+    QTextStream out(&file);
+    int lost = (m_countSent > m_countReceived) ? (m_countSent - m_countReceived) : 0;
+
+    out << "TIEMPO;TIPO;DATO;ESTADISTICAS\n";
+    out << ";;;Enviados: " << m_countSent << "\n";
+    out << ";;;Recibidos: " << m_countReceived << "\n";
+    out << ";;;Perdidos: " << lost << "\n";
+    out << ";;;Desconocidos: " << m_countUnknown << "\n";
+    out << ";;;Errores Checksum: " << m_countChecksumErrors << "\n\n";
+    
+    out << "TIEMPO;TIPO;DATO\n";
+
+    for (const auto &entry : m_logHistory) {
+        QString cleanData = entry.data;
+        cleanData.replace("\n", " ").replace(";", ",");
+        out << entry.time.toString("hh:mm:ss.zzz") << ";" << entry.type << ";" << cleanData << "\n";
+    }
+
+    file.close();
+    QMessageBox::information(this, "Exportación Exitosa", 
+                            QString("Se han exportado %1 registros de los últimos 5 minutos.").arg(m_logHistory.size()));
+}
+
+void MainWindow::on_pushButton_exportTxt_clicked() {
+    QString fileName = QFileDialog::getSaveFileName(this, "Exportar Historial (Texto Plano)", 
+                                                    "log_robot_" + QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss") + ".txt", 
+                                                    "Archivos de Texto (*.txt)");
+    if (fileName.isEmpty()) return;
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Error", "No se pudo crear el archivo.");
+        return;
+    }
+
+    QTextStream out(&file);
+    int lost = (m_countSent > m_countReceived) ? (m_countSent - m_countReceived) : 0;
+
+    out << "====================================================\n";
+    out << "        REPORTE DE ACTIVIDAD DEL ROBOT\n";
+    out << "        Generado el: " << QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") << "\n";
+    out << "====================================================\n\n";
+    
+    out << "ESTADISTICAS (Ultimos 5 minutos):\n";
+    out << "----------------------------------------------------\n";
+    out << " Comandos Enviados:    " << m_countSent << "\n";
+    out << " Comandos Recibidos:   " << m_countReceived << "\n";
+    out << " Comandos Perdidos:    " << lost << "\n";
+    out << " Comandos Desconocidos: " << m_countUnknown << "\n";
+    out << " Errores de Checksum:  " << m_countChecksumErrors << "\n";
+    out << "----------------------------------------------------\n\n";
+
+    out << "DETALLE DE LOGS:\n";
+    out << "TIMESTAMP    | TIPO      | DATO\n";
+    out << "-------------|-----------|--------------------------\n";
+
+    for (const auto &entry : m_logHistory) {
+        out << entry.time.toString("hh:mm:ss.zzz").leftJustified(12) << " | "
+            << entry.type.leftJustified(9) << " | "
+            << entry.data.simplified() << "\n";
+    }
+
+    out << "\n--- Fin del reporte ---";
+
+    file.close();
+    QMessageBox::information(this, "Exportación Exitosa", "Historial exportado correctamente a .txt");
+}
+
 void MainWindow::dataReceived(){
     unsigned char *incomingBuffer;
     int count;
@@ -96,6 +200,7 @@ void MainWindow::dataReceived(){
             str = str +"{" + QString("%1").arg(incomingBuffer[i],2,16,QChar('0')) + "}";
     }
 
+    addLogEntry("MBED-->SERIAL-->PC (" + str + ")", "RX");
     ui->textBrowserUnProcessed->append("MBED-->SERIAL-->PC (" + str + ")");
 
     //Cada vez que se recibe un dato reinicio el timeOut
@@ -159,7 +264,9 @@ void MainWindow::dataReceived(){
                 if(rxData.cheksum==incomingBuffer[i]){
                     decodeData(&rxData.payLoad[0], SERIE);
                 }else{
+                    addLogEntry("Chk Calculado ** " +QString().number(rxData.cheksum,16) + " **", "CHK_ERROR");
                     ui->textBrowserUnProcessed->append("Chk Calculado ** " +QString().number(rxData.cheksum,16) + " **" );
+                    addLogEntry("Chk recibido ** " +QString().number(incomingBuffer[i],16) + " **", "CHK_ERROR");
                     ui->textBrowserUnProcessed->append("Chk recibido ** " +QString().number(incomingBuffer[i],16) + " **" );
 
                 }
@@ -175,6 +282,8 @@ void MainWindow::dataReceived(){
 }
 
 void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
+    m_countReceived++; // Comando completo y válido recibido
+
     //int32_t length = sizeof(*datosRx)/sizeof(datosRx[0]);
     int32_t length = datosRx[0];
     uint8_t id = datosRx[1];
@@ -195,11 +304,14 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         else
             str = str +QString("%1").arg(datosRx[i],2,16,QChar('0'));
     }
+    addLogEntry("*(MBED-S->PC)->decodeData (" + str + ")", "RX");
     ui->textBrowserUnProcessed->append("*(MBED-S->PC)->decodeData (" + str + ")");
 
     str=QString().number(datosRx[0]);
+    addLogEntry(str, "RX");
     ui->textBrowserProcessed->append(str);
     str=QString().number(datosRx[1]);
+    addLogEntry(str, "RX");
     ui->textBrowserProcessed->append(str);
 
     switch (datosRx[1]) {
@@ -214,6 +326,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         }else{
             str= "ALIVE BLUEPILL VIA *SERIE*  NO ACK!!!";
         }
+        addLogEntry(str, "RX");
         ui->textBrowserProcessed->append(str);
         break;
     case GETFIRMWARE://     GETFIRMWARE=0xF1
@@ -221,6 +334,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         for(uint8_t i=0;i<(datosRx[0]-2);i++){ //datosRx[0] -> tamaño en bytes del mensaje.
             str += (QChar)datosRx[2+i];
         }
+        addLogEntry(str, "RX");
         ui->textBrowserProcessed->append(str);
         break;
     case GETMPU:{
@@ -232,6 +346,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         float ax = w.i16[0];
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Ax: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ax_data->display(str);
           ///  setText(str);
@@ -242,6 +357,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         float ay = w.i16[0];
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Ay: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ay_data->display(str);
 
@@ -251,6 +367,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         float az = w.i16[0];
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Az: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->az_data->display(str);
 
@@ -260,6 +377,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
 
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Gx: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->gx_data->display(str);
 
@@ -268,6 +386,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
 
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Gy: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->gy_data->display(str);
 
@@ -277,6 +396,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         float gz = w.i16[0];
         str = QString("%1").arg(w.i16[0], 5, 10, QChar('0'));
         strOut = "Gz: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->gz_data->display(str);
 
@@ -315,6 +435,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[3];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR1: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ir1_data->display(str);
 
@@ -322,6 +443,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[5];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR2: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ir2_data->display(str);
         sumLineSensors += qMax(0, 2400 - w.i16[0]);
@@ -330,6 +452,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[7];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR3: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ir3_data->display(str);
 
@@ -337,6 +460,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[9];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR4: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ir4_data->display(str);
         sumLineSensors += qMax(0, 2400 - w.i16[0]);
@@ -345,6 +469,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[11];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR5: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ir5_data->display(str);
 
@@ -352,6 +477,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[13];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR6: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ir6_data->display(str);
         sumLineSensors += qMax(0, 2400 - w.i16[0]);
@@ -362,6 +488,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[15];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR7: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ir7_data->display(str);
 
@@ -369,6 +496,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
         w.ui8[1] = datosRx[17];
         str = QString("%1").arg(w.ui16[0], 5, 10, QChar('0'));
         strOut = "IR8: " + str;
+        addLogEntry(strOut, "RX");
         ui->textBrowserProcessed->append(strOut);
         ui->ir8_data->display(str);
 
@@ -398,6 +526,7 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             w.ui8[0] = datosRx[28]; w.ui8[1] = datosRx[29]; ui->setCounterAngle->setValue(w.i16[0]);
 
             paramsSynced = true;
+            addLogEntry("***PARÁMETROS SINCRONIZADOS DESDE STM32***", "RX");
             ui->textBrowserProcessed->append("***PARÁMETROS SINCRONIZADOS DESDE STM32***");
         }
         break;
@@ -456,12 +585,14 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
     case SETBKANG:
         if(datosRx[2]==ACK){
             str="COMANDO ACEPTADO Y GUARDADO (ACK)!!!";
+            addLogEntry(str, "RX");
             ui->textBrowserProcessed->append(str);
         }
         break;
 
     default:
         str = str + "Comando DESCONOCIDO!!!!";
+        addLogEntry(str, "UNKNOWN");
         ui->textBrowserProcessed->append(str);
     }
 }
@@ -504,6 +635,7 @@ void MainWindow::sendSerial(uint8_t *buf, uint8_t length){
         strHex = strHex + QString("%1").arg(tx[i], 2, 16, QChar('0')).toUpper();
     }
 
+    addLogEntry(strHex, "TX");
     ui->textBrowserUnProcessed->append(strHex);
 
     QSerialPort1->write((char *)tx, length+7);
@@ -572,6 +704,7 @@ void MainWindow::sendUdp(uint8_t *buf, uint8_t length){
     }
     str=str + clientAddress.toString() + "  " +  QString().number(puertoremoto,10);
 
+    addLogEntry("PC--UDP-->MBED ( " + str + " )", "TX");
     ui->textBrowserUnProcessed->append("PC--UDP-->MBED ( " + str + " )");
 }
 
@@ -581,14 +714,15 @@ void MainWindow::sendCommand(uint8_t *buf, uint8_t length) {
     if (QSerialPort1->isOpen()) {
         sendSerial(buf, length);
         sent = true;
-    }
-
-    if (QUdpSocket1->isOpen()) {
+        m_countSent++;
+    } else if (QUdpSocket1->isOpen()) {
         sendUdp(buf, length);
         sent = true;
+        m_countSent++;
     }
 
     if (!sent) {
+        addLogEntry("***ERROR: NINGUNA CONEXIÓN ABIERTA***", "CHK_ERROR");
         ui->textBrowserProcessed->append("***ERROR: NINGUNA CONEXIÓN ABIERTA***");
     }
 }
@@ -625,7 +759,9 @@ void MainWindow::OnUdpRxData(){
             else
                 str = str + "{" + QString("%1").arg(incomingBuffer[i], 2, 16, QChar('0')) + "}";
         }
+        addLogEntry("MBED-->UDP-->PC (" + str + ")", "RX");
         ui->textBrowserUnProcessed->append("MBED-->UDP-->PC (" + str + ")");
+        addLogEntry(" adr " + RemoteAddress.toString(), "RX");
         ui->textBrowserUnProcessed->append(" adr " + RemoteAddress.toString());
 
         // Actualizar la IP y el puerto detectado del robot
@@ -700,6 +836,7 @@ void MainWindow::OnUdpRxData(){
                     if(rxDataUdp.cheksum == incomingBuffer[i]){
                         decodeData(&rxDataUdp.payLoad[0], UDP);
                     } else {
+                        addLogEntry(" CHK DISTINTO!!!!! ", "CHK_ERROR");
                         ui->textBrowserProcessed->append(" CHK DISTINTO!!!!! ");
                         // --- LIBERAR SEMÁFORO en error de CHK ---
                         // Sin esto, getData() queda bloqueado ~600ms esperando
