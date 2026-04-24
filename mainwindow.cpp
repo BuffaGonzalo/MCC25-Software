@@ -931,6 +931,7 @@ void MainWindow::on_pushButton_connectSerial_clicked()
     if(QSerialPort1->isOpen()){
         QSerialPort1->close();
         ui->pushButton_connectSerial->setText("CONNECT");
+        resetInterface();
     }
     else{
 
@@ -963,6 +964,7 @@ void MainWindow::on_pushButton_connectUdp_clicked()
     if(QUdpSocket1->isOpen()){
         QUdpSocket1->close();
         ui->pushButton_connectUdp->setText("CONNECT");
+        resetInterface();
         return;
     }
 
@@ -1273,4 +1275,22 @@ void MainWindow::updatePIDChart(double time, double p, double i, double d, doubl
     // Scroll del eje X (ventana de 10 segundos)
     if (time > 10.0)
         pid_axisX->setRange(time - 10.0, time);
+}
+
+void MainWindow::resetInterface() {
+    paramsSynced = false;
+    
+    // Resetear QSpinBoxes
+    QList<QSpinBox *> spinBoxes = this->findChildren<QSpinBox *>();
+    for (QSpinBox *spinBox : spinBoxes) {
+        bool oldState = spinBox->blockSignals(true);
+        spinBox->setValue(0);
+        spinBox->blockSignals(oldState);
+    }
+
+    // Resetear QLCDNumbers (Sensores IR, Acelerómetro, Giroscopio, etc.)
+    QList<QLCDNumber *> lcdNumbers = this->findChildren<QLCDNumber *>();
+    for (QLCDNumber *lcd : lcdNumbers) {
+        lcd->display(0);
+    }
 }

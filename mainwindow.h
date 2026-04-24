@@ -155,6 +155,7 @@ private:
 
     void initPIDChart();
     void updatePIDChart(double time, double p, double i, double d, double out);
+    void resetInterface();
 
     //variables comunicacion udp
     QUdpSocket *QUdpSocket1;
