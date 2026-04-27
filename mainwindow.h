@@ -86,8 +86,8 @@ private slots:
     void on_sendLineKp_clicked();
     void on_sendLineKd_clicked();
 
-    void on_sendPIDMIN_clicked();
-    void on_sendPIDMAX_clicked();
+    void on_sendPWMMINL_clicked();
+    void on_sendPWMMINR_clicked();
     void on_sendSetpoint_clicked();
     void on_sendAttackSetpoint_clicked();
 
@@ -203,8 +203,8 @@ private:
         SETPWML=0xA4, // -> divisible en 2
         SETPWMR=0xA5,
 
-        SETPWMLIMMAX=0xA6, //-> divisible en max y min
-        SETPWMLIMMIN=0xA7,
+        SETPWMMINR=0xA6, //-> divisible en max y min
+        SETPWMMINL=0xA7,
 
         SETBALANCEKP=0XA8, //->kp,kd,ki
         SETBALANCEKD=0xA9,

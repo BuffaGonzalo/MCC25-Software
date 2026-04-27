@@ -508,8 +508,8 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
             w.ui8[0] = datosRx[2];  w.ui8[1] = datosRx[3];  ui->setBalanceKp->setValue(w.i16[0]);
             w.ui8[0] = datosRx[4];  w.ui8[1] = datosRx[5];  ui->setBalanceKi->setValue(w.i16[0]);
             w.ui8[0] = datosRx[6];  w.ui8[1] = datosRx[7];  ui->setBalanceKd->setValue(w.i16[0]);
-            w.ui8[0] = datosRx[8];  w.ui8[1] = datosRx[9];  ui->setPIDMAX->setValue(w.ui16[0]);
-            w.ui8[0] = datosRx[10]; w.ui8[1] = datosRx[11]; ui->setPIDMIN->setValue(w.ui16[0]);
+            w.ui8[0] = datosRx[8];  w.ui8[1] = datosRx[9];  ui->setPWMMINR->setValue(w.ui16[0]);
+            w.ui8[0] = datosRx[10]; w.ui8[1] = datosRx[11]; ui->setPWMMINL->setValue(w.ui16[0]);
 
             // 2. Setpoint (indices 12 a 15)
             w.ui8[0] = datosRx[12]; w.ui8[1] = datosRx[13];
@@ -570,8 +570,8 @@ void MainWindow::decodeData(uint8_t *datosRx, uint8_t source){
     }
     case SETPWML:
     case SETPWMR:
-    case SETPWMLIMMAX:
-    case SETPWMLIMMIN:
+    case SETPWMMINR:
+    case SETPWMMINL:
     case SETBALANCEKP:
     case SETBALANCEKD:
     case SETBALANCEKI:
@@ -1056,28 +1056,28 @@ void MainWindow::on_sendLineKd_clicked() {
     ui->textBrowserProcessed->append("***KD LÍNEA ACTUALIZADO***");
 }
 
-void MainWindow::on_sendPIDMIN_clicked() {
+void MainWindow::on_sendPWMMINL_clicked() {
     uint8_t payload[10];
     uint8_t index = 0;
     _udat w;
-    payload[index++] = SETPWMLIMMIN; // 0xA7
-    w.i32 = ui->setPIDMIN->value();
+    payload[index++] = SETPWMMINL; // 0xA7
+    w.i32 = ui->setPWMMINL->value();
     payload[index++] = w.ui8[0];
     payload[index++] = w.ui8[1];
     sendCommand(payload, index);
-    ui->textBrowserProcessed->append("***PWM MIN ACTUALIZADO***");
+    ui->textBrowserProcessed->append("***PWM MIN L ACTUALIZADO***");
 }
 
-void MainWindow::on_sendPIDMAX_clicked() {
+void MainWindow::on_sendPWMMINR_clicked() {
     uint8_t payload[10];
     uint8_t index = 0;
     _udat w;
-    payload[index++] = SETPWMLIMMAX; // 0xA6
-    w.i32 = ui->setPIDMAX->value();
+    payload[index++] = SETPWMMINR; // 0xA6
+    w.i32 = ui->setPWMMINR->value();
     payload[index++] = w.ui8[0];
     payload[index++] = w.ui8[1];
     sendCommand(payload, index);
-    ui->textBrowserProcessed->append("***PWM MAX ACTUALIZADO***");
+    ui->textBrowserProcessed->append("***PWM MIN R ACTUALIZADO***");
 }
 
 void MainWindow::on_sendSetpoint_clicked() {

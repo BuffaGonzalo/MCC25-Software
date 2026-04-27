@@ -488,17 +488,17 @@
             </font>
            </property>
            <property name="text">
-            <string>PID LIMIT - MIN</string>
+            <string>PWM MIN LEFT</string>
            </property>
           </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_17">
            <item>
-            <widget class="QSpinBox" name="setPIDMIN"/>
+            <widget class="QSpinBox" name="setPWMMINL"/>
            </item>
            <item>
-            <widget class="QPushButton" name="sendPIDMIN">
+            <widget class="QPushButton" name="sendPWMMINL">
              <property name="text">
               <string>ENVIAR</string>
              </property>
@@ -518,17 +518,17 @@
             </font>
            </property>
            <property name="text">
-            <string>PID LIMIT - MAX</string>
+            <string>PWM MIN RIGHT</string>
            </property>
           </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_18">
            <item>
-            <widget class="QSpinBox" name="setPIDMAX"/>
+            <widget class="QSpinBox" name="setPWMMINR"/>
            </item>
            <item>
-            <widget class="QPushButton" name="sendPIDMAX">
+            <widget class="QPushButton" name="sendPWMMINR">
              <property name="text">
               <string>ENVIAR</string>
              </property>
